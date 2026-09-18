@@ -122,10 +122,13 @@
   .ep-page{
     position:fixed; inset:0; z-index:1000; background:var(--bg);
     overflow-y:auto; -webkit-overflow-scrolling:touch;
-    opacity:0; pointer-events:none; transform:translateY(24px);
-    transition:opacity .4s ease, transform .4s ease;
+    opacity:0; visibility:hidden; pointer-events:none;
+    transition:opacity .35s ease, visibility 0s linear .35s;
   }
-  .ep-page.open{ opacity:1; pointer-events:auto; transform:translateY(0); }
+  /* NOTE: no `transform` on this element — a transformed ancestor becomes the
+     positioning anchor for any position:fixed descendant (like .now-bar),
+     which breaks the player bar'''s pinning on mobile browsers. Fade only. */
+  .ep-page.open{ opacity:1; visibility:visible; pointer-events:auto; transition:opacity .35s ease; }
   .ep-topbar{
     position:sticky; top:0; z-index:5; display:flex; align-items:center; justify-content:space-between;
     padding:20px 6vw; background:rgba(10,10,11,.85); backdrop-filter:blur(10px); border-bottom:1px solid rgba(255,255,255,.06);
@@ -362,8 +365,8 @@
 <section id="hero">
   <div class="reveal in">
     <div class="kicker">Recording Artist &middot; Producer</div>
-    <h1 class="hero-title">ALEX<br>ELLERBE</h1>
-    <div class="hero-alias">A.C.E. — THE HU$TLEMAN</div>
+    <h1 class="hero-title">Th0r0 Heart<br>Camp</h1>
+    <div class="hero-alias">A.C.E.</div>
     <p class="hero-sub">New sounds, new visuals, and a movement built from the ground up. Stream the latest work and follow along for what's next.</p>
     <div class="hero-actions">
       <button class="btn" id="openPlayer"><span class="play-ico"></span> Listen to EP</button>
@@ -381,10 +384,10 @@
   </div>
 
   <div class="ep-hero">
-    <div class="ep-cover">ACE</div>
+    <div class="ep-cover">A.C.E.</div>
     <div class="ep-meta">
       <div class="ep-kind">EP</div>
-      <h2>The Hu$tleman</h2>
+      <h2>Bonnie & Clyde Vol.2 (Early Access)</h2>
       <div class="ep-artist">Alex Ellerbe</div>
       <div class="ep-stats"><span><b id="epTrackCount">0</b> tracks</span><span id="epTotalDur">--:-- total</span></div>
     </div>
@@ -473,20 +476,22 @@
   <div class="cards">
     <div class="card reveal">
       <span class="tag">EP</span>
-      <h4>Untitled Project</h4>
+      <h4>NEW EP COMING SOON...</h4>
       <p>A new EP is in the works. Details, tracklist, and release date coming soon.</p>
-      <span class="status-pill">Coming Soon</span>
+      <span class="status-pill">Bonnie & CLyde vol.2</span>
     </div>
     <div class="card reveal">
       <span class="tag">Single</span>
-      <h4>New Single</h4>
-      <p>Title and drop date to be announced. Stay tuned for the first taste of what's next.</p>
-      <span class="status-pill">TBA</span>
+      <h4>NEW SINGLES COMING SOON...</h4>
+      <p>Stay tuned for 'Hit the Ground' and 'Mama', coming soon.</p>
+      <span class="status-pill">Hit the Ground</span>
+      <span class="status-pill">Mama</span>
+
     </div>
     <div class="card reveal">
       <span class="tag">Collab</span>
-      <h4>Collaboration</h4>
-      <p>Space reserved for an upcoming feature or collaboration announcement.</p>
+      <h4>NEW COLLABORATIONS COMING SOON...</h4>
+      <p>Stay tuned for exciting collaborations in the works!</p>
       <span class="status-pill">TBA</span>
     </div>
   </div>
@@ -501,14 +506,15 @@
     <div class="support-card reveal">
       <div class="support-icon">$</div>
       <h4>CashApp</h4>
-      <div class="tagname">$YourCashtagHere</div>
+      <div class="tagname">$AlexEllerbe</div>
       <div class="note">Link coming soon</div>
     </div>
     <div class="support-card reveal">
-      <div class="support-icon">V</div>
-      <h4>Venmo</h4>
-      <div class="tagname">@YourVenmoHere</div>
-      <div class="note">Link coming soon</div>
+      <div class="support-icon">Z</div>
+      <h4>Zelle</h4>
+      <div class="tagname">Alex Ellerbe</div>
+      <img src="acezelle.PNG" alt="Zelle QR Code" class="zelle-qr">
+      <!-- <div class="note">Link coming soon</div> -->
     </div>
     <div class="support-card reveal">
       <div class="support-icon">P</div>
@@ -524,10 +530,10 @@
   <div class="foot-top">
     <div class="foot-brand">
       <h2>ALEX ELLERBE</h2>
-      <p>A.C.E. — The Hu$tleman. Follow for new music, videos, and everything happening next.</p>
+      <p>A.C.E. Follow for new music, videos, and everything happening next.</p>
     </div>
     <div class="social-row">
-      <a class="social-btn" href="#" aria-label="Instagram" target="_blank" rel="noopener">
+      <a class="social-btn" href="https://www.instagram.com/th0r0_heart_camp?stkn=eHJjbjl0bzcwdW43" aria-label="Instagram" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.3" cy="6.7" r="1.1" fill="currentColor" stroke="none"/></svg>
       </a>
       <a class="social-btn" href="#" aria-label="TikTok" target="_blank" rel="noopener">
@@ -554,9 +560,9 @@
      this HTML file, then list them here. Supported: mp3, wav, m4a.
      ========================================================= */
   const TRACKS = [
-    { title: "Hu$tleman",        src: "audio/track-1.mp3" },
-    { title: "Run This Town",    src: "audio/track-2.mp3" },
-    { title: "Bonnie & Clyde",   src: "audio/track-3.mp3" },
+    { title: "Squad Up",        src: "audio/SquadUp.mp3" },
+    { title: "Hit The Ground (prod. by The L)",    src: "audio/track-2.mp3" },
+    { title: "Mama",   src: "audio/track-3.mp3" },
     { title: "Track 4",          src: "audio/track-4.mp3" },
   ];
 
