@@ -122,10 +122,13 @@
   .ep-page{
     position:fixed; inset:0; z-index:1000; background:var(--bg);
     overflow-y:auto; -webkit-overflow-scrolling:touch;
-    opacity:0; pointer-events:none; transform:translateY(24px);
-    transition:opacity .4s ease, transform .4s ease;
+    opacity:0; visibility:hidden; pointer-events:none;
+    transition:opacity .35s ease, visibility 0s linear .35s;
   }
-  .ep-page.open{ opacity:1; pointer-events:auto; transform:translateY(0); }
+  /* NOTE: no `transform` on this element — a transformed ancestor becomes the
+     positioning anchor for any position:fixed descendant (like .now-bar),
+     which breaks the player bar'''s pinning on mobile browsers. Fade only. */
+  .ep-page.open{ opacity:1; visibility:visible; pointer-events:auto; transition:opacity .35s ease; }
   .ep-topbar{
     position:sticky; top:0; z-index:5; display:flex; align-items:center; justify-content:space-between;
     padding:20px 6vw; background:rgba(10,10,11,.85); backdrop-filter:blur(10px); border-bottom:1px solid rgba(255,255,255,.06);
