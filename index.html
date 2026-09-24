@@ -189,6 +189,12 @@
   .track-wave span{ flex:1; background:rgba(255,255,255,.18); border-radius:1px; }
   .track-row.playing .track-wave span{ background:linear-gradient(180deg,var(--orange),var(--red)); }
   .track-dur{ color:var(--muted); font-size:.85rem; width:48px; text-align:right; flex-shrink:0; }
+  .track-dur.platform-badge{ width:auto; color:var(--orange); font-weight:700; font-size:.72rem; letter-spacing:.06em; text-transform:uppercase; }
+
+  .track-embed{ max-height:0; overflow:hidden; transition:max-height .35s ease; }
+  .track-embed.open{ max-height:200px; margin:2px 0 16px; }
+  .track-embed .embed-inner{ border-radius:12px; overflow:hidden; background:#000; }
+  .track-embed iframe{ width:100%; border:0; display:block; }
 
   .ep-elsewhere{ display:flex; gap:12px; flex-wrap:wrap; padding:0 6vw 60px; }
   .ep-elsewhere a{
@@ -305,6 +311,25 @@
     transform:scaleX(0); transform-origin:left; transition:transform .4s ease;
   }
   .card:hover::before{ transform:scaleX(1); }
+  .card-cover{
+    position:relative; aspect-ratio:1/1; margin:-32px -28px 22px; background:var(--bg-2); overflow:hidden;
+  }
+  .card-cover .cover-fallback{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center; z-index:0;
+    background:var(--grad); font-family:'Arial Black',Arial,sans-serif; font-size:1.6rem; color:rgba(10,10,11,.55);
+    text-transform:uppercase; letter-spacing:.04em;
+  }
+  .card-cover img.slide{
+    position:absolute; inset:0; z-index:1; width:100%; height:100%; object-fit:cover; display:block;
+    opacity:0; transition:opacity 1.1s ease, transform 6s ease;
+  }
+  .card-cover img.slide.active{ opacity:1; z-index:2; transform:scale(1.06); }
+  .card:hover .card-cover img.slide.active{ transform:scale(1.12); }
+  .card-cover .slide-dots{
+    position:absolute; bottom:10px; left:0; right:0; z-index:3; display:flex; justify-content:center; gap:6px;
+  }
+  .card-cover .slide-dots span{ width:5px; height:5px; border-radius:50%; background:rgba(255,255,255,.4); transition:background .3s ease, transform .3s ease; }
+  .card-cover .slide-dots span.active{ background:var(--orange); transform:scale(1.3); }
   .card .tag{ font-size:.72rem; letter-spacing:.2em; text-transform:uppercase; color:var(--orange); margin-bottom:16px; display:block; }
   .card h4{ font-size:1.4rem; text-transform:none; font-family:inherit; font-weight:800; margin-bottom:10px; }
   .card p{ color:var(--muted); font-size:.92rem; line-height:1.6; margin:0 0 20px; }
@@ -438,12 +463,12 @@
     <div class="video-copy reveal">
       <h2 class="section-title" style="margin-bottom:0;">The Latest<br>Music Video</h2>
       <p>Press play above or head straight to YouTube to watch, like, and subscribe for everything dropping next.</p>
-      <a class="yt-badge" href="https://youtu.be/DxrhX-ZfcTM?is=oAJbWzRPrp6xIuSU" target="_blank" rel="noopener">
+      <a class="yt-badge" href="https://www.youtube.com/@000420Ace/featured" target="_blank" rel="noopener">
         <svg class="yt-logo" viewBox="0 0 28 20" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M27.4 3.1c-.3-1.2-1.3-2.1-2.5-2.4C22.8 0 14 0 14 0S5.2 0 3.1.7C1.9 1 .9 1.9.6 3.1 0 5.2 0 10 0 10s0 4.8.6 6.9c.3 1.2 1.3 2.1 2.5 2.4C5.2 20 14 20 14 20s8.8 0 10.9-.7c1.2-.3 2.2-1.2 2.5-2.4.6-2.1.6-6.9.6-6.9s0-4.8-.6-6.9z" fill="#FF0000"/>
           <path d="M11 14.2 18.5 10 11 5.8v8.4z" fill="#fff"/>
         </svg>
-        Watch on YouTube
+        YouTube Channel
       </a>
     </div>
   </div>
@@ -475,12 +500,24 @@
   <h2 class="section-title reveal">Upcoming</h2>
   <div class="cards">
     <div class="card reveal">
+      <div class="card-cover">
+        <div class="cover-fallback">EP</div>
+        <img class="slide" src="covers/bonnie-clyde-vol2-1.jpg" alt="Bonnie & Clyde vol.2 cover art 1" onerror="this.remove()">
+        <img class="slide" src="covers/bonnie-clyde-vol1.jpg" alt="Bonnie & Clyde vol.2 cover art 2" onerror="this.remove()">
+        <img class="slide" src="covers/bonnie-clyde-vol2-3.jpg" alt="Bonnie & Clyde vol.2 cover art 3" onerror="this.remove()">
+      </div>
       <span class="tag">EP</span>
       <h4>NEW EP COMING SOON...</h4>
       <p>A new EP is in the works. Details, tracklist, and release date coming soon.</p>
       <span class="status-pill">Bonnie & CLyde vol.2</span>
     </div>
     <div class="card reveal">
+      <div class="card-cover">
+        <div class="cover-fallback">SGL</div>
+        <img class="slide" src="covers/hit-the-ground-1.jpg" alt="Hit the Ground cover art 1" onerror="this.remove()">
+        <img class="slide" src="covers/hit-the-ground-2.jpg" alt="Hit the Ground cover art 2" onerror="this.remove()">
+        <img class="slide" src="covers/mama-1.jpg" alt="Mama cover art" onerror="this.remove()">
+      </div>
       <span class="tag">Single</span>
       <h4>NEW SINGLES COMING SOON...</h4>
       <p>Stay tuned for 'Hit the Ground' and 'Mama', coming soon.</p>
@@ -489,6 +526,12 @@
 
     </div>
     <div class="card reveal">
+      <div class="card-cover">
+        <div class="cover-fallback">CLB</div>
+        <img class="slide" src="covers/collab-1.jpg" alt="Collaboration cover art 1" onerror="this.remove()">
+        <img class="slide" src="covers/collab-2.jpg" alt="Collaboration cover art 2" onerror="this.remove()">
+        <img class="slide" src="covers/collab-3.jpg" alt="Collaboration cover art 3" onerror="this.remove()">
+      </div>
       <span class="tag">Collab</span>
       <h4>NEW COLLABORATIONS COMING SOON...</h4>
       <p>Stay tuned for exciting collaborations in the works!</p>
@@ -506,8 +549,8 @@
     <div class="support-card reveal">
       <div class="support-icon">$</div>
       <h4>CashApp</h4>
-      <div class="tagname">$AlexEllerbe</div>
-      <div class="note">Link coming soon</div>
+      <div class="tagname"><a href="https://cash.app/$AlexEllerbe" target="_blank" rel="noopener">$AlexEllerbe</a></div>
+      <div class="note"><a href="https://cash.app/$AlexEllerbe" target="_blank" rel="noopener">https://cash.app/$AlexEllerbe</a></div>
     </div>
     <div class="support-card reveal">
       <div class="support-icon">Z</div>
@@ -519,7 +562,7 @@
     <div class="support-card reveal">
       <div class="support-icon">P</div>
       <h4>PayPal</h4>
-      <div class="tagname">paypal.me/YourNameHere</div>
+      <div class="tagname">paypal.me/AlexEllerbe</div>
       <div class="note">Link coming soon</div>
     </div>
   </div>
@@ -555,16 +598,45 @@
 
 <script>
   /* =========================================================
-     TRACKLIST — edit this array to add your real songs.
-     Put your audio files in a folder called "audio" next to
-     this HTML file, then list them here. Supported: mp3, wav, m4a.
+     TRACKLIST — edit this array to control what plays and how.
+
+     Two kinds of entries:
+
+     1) type: "local"  — plays through our own custom player using
+        a file you host yourself (audio/track.mp3). Good for previews
+        of unreleased material. IMPORTANT: plays here do NOT count
+        toward SoundCloud/Spotify play counts or PRO/royalty reporting
+        — there's nothing tracking a play on your own webserver.
+
+     2) type: "soundcloud" or "spotify" — plays through that
+        platform's REAL embedded player (their actual widget, loaded
+        right on the site). Because the play genuinely happens on
+        SoundCloud/Spotify's own system, it counts the same as any
+        other play on that platform. Use this for anything that's
+        actually been released/distributed. Just paste the real
+        track URL:
+          soundcloud: the on.soundcloud.com/... or soundcloud.com/... link
+          spotify:    the open.spotify.com/track/... link
+
+     Only "local" tracks use the audio/ folder — embed tracks need no file at all.
      ========================================================= */
   const TRACKS = [
-    { title: "Squad Up",        src: "audio/SquadUp.mp3" },
-    { title: "Hit The Ground (prod. by The L)",    src: "audio/track-2.mp3" },
-    { title: "Mama",   src: "audio/track-3.mp3" },
-    { title: "Track 4",          src: "audio/track-4.mp3" },
+    { title: "Squad Up", type: "soundcloud", url: "https://on.soundcloud.com/LD1K7P9gMBk1OasAsx" },
+    { title: "Hit The Ground (prod. by The L)", type: "local", src: "audio/track-2.mp3" },
+    { title: "Mama",   type: "local", src: "audio/track-3.mp3" },
+    { title: "Track 4", type: "local", src: "audio/track-4.mp3" },
+    // Example once a track is live on Spotify:
+    // { title: "Track 5", type: "spotify", url: "https://open.spotify.com/track/XXXXXXXXXXXXXXXXXXXXXX" },
   ];
+
+  function soundcloudEmbedSrc(url){
+    return `https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}&color=%23ff7a1a&auto_play=true&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=false`;
+  }
+  function spotifyEmbedSrc(url){
+    const m = url.match(/track\/([a-zA-Z0-9]+)/);
+    const id = m ? m[1] : '';
+    return `https://open.spotify.com/embed/track/${id}?utm_source=generator&theme=0`;
+  }
 
   const audio = new Audio();
   let currentTrack = -1;
@@ -595,8 +667,13 @@
 
   function renderTracks(){
     epTrackCount.textContent = TRACKS.length;
-    epList.innerHTML = TRACKS.map((t,i)=>`
-      <div class="track-row" data-index="${i}">
+    epList.innerHTML = TRACKS.map((t,i)=>{
+      const isEmbed = t.type === 'soundcloud' || t.type === 'spotify';
+      const durCell = isEmbed
+        ? `<div class="track-dur platform-badge" data-dur-for="${i}">${t.type}</div>`
+        : `<div class="track-dur" data-dur-for="${i}">--:--</div>`;
+      const row = `
+      <div class="track-row" data-index="${i}" data-type="${t.type}">
         <div class="track-num">${i+1}</div>
         <button class="track-playbtn" aria-label="Play ${t.title}">
           <span class="tri3"></span>
@@ -607,20 +684,29 @@
           <div class="t-sub">Alex Ellerbe</div>
         </div>
         <div class="track-wave">${makeWaveBars(28)}</div>
-        <div class="track-dur" data-dur-for="${i}">--:--</div>
-      </div>
-    `).join('');
+        ${durCell}
+      </div>`;
+      const embedShell = isEmbed ? `<div class="track-embed" id="embed-${i}"><div class="embed-inner"></div></div>` : '';
+      return row + embedShell;
+    }).join('');
 
     epList.querySelectorAll('.track-row').forEach(row=>{
       row.addEventListener('click', ()=>{
         const i = parseInt(row.dataset.index, 10);
-        if(currentTrack === i){ togglePlay(); }
-        else { loadTrack(i, true); }
+        const t = TRACKS[i];
+        if(t.type === 'soundcloud' || t.type === 'spotify'){
+          toggleEmbed(i);
+        } else if(currentTrack === i){
+          togglePlay();
+        } else {
+          loadTrack(i, true);
+        }
       });
     });
 
-    // probe durations quietly without playing
+    // probe durations quietly without playing — local tracks only
     TRACKS.forEach((t, i)=>{
+      if(t.type !== 'local') return;
       const probe = new Audio();
       probe.preload = 'metadata';
       probe.src = t.src;
@@ -635,6 +721,50 @@
     });
   }
 
+  let openEmbedIndex = -1;
+  function toggleEmbed(i){
+    const t = TRACKS[i];
+    const shell = document.getElementById(`embed-${i}`);
+    const row = epList.querySelector(`.track-row[data-index="${i}"]`);
+    const inner = shell.querySelector('.embed-inner');
+
+    // closing the one that's already open
+    if(openEmbedIndex === i){
+      shell.classList.remove('open');
+      row.classList.remove('playing');
+      inner.innerHTML = ''; // stops playback
+      openEmbedIndex = -1;
+      return;
+    }
+    // close whichever embed was open before
+    if(openEmbedIndex !== -1){
+      const prevShell = document.getElementById(`embed-${openEmbedIndex}`);
+      const prevRow = epList.querySelector(`.track-row[data-index="${openEmbedIndex}"]`);
+      if(prevShell){ prevShell.classList.remove('open'); prevShell.querySelector('.embed-inner').innerHTML = ''; }
+      if(prevRow) prevRow.classList.remove('playing');
+    }
+    // pause our own local-file player too, so nothing double-plays
+    if(!audio.paused) audio.pause();
+
+    const iframe = document.createElement('iframe');
+    if(t.type === 'soundcloud'){
+      iframe.src = soundcloudEmbedSrc(t.url);
+      iframe.height = '166';
+      iframe.setAttribute('scrolling', 'no');
+      iframe.setAttribute('allow', 'autoplay');
+    } else {
+      iframe.src = spotifyEmbedSrc(t.url);
+      iframe.height = '152';
+      iframe.setAttribute('allow', 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture');
+      iframe.setAttribute('loading', 'lazy');
+    }
+    inner.innerHTML = '';
+    inner.appendChild(iframe);
+    shell.classList.add('open');
+    row.classList.add('playing');
+    openEmbedIndex = i;
+  }
+
   function updateRowStates(){
     epList.querySelectorAll('.track-row').forEach(row=>{
       const i = parseInt(row.dataset.index, 10);
@@ -646,6 +776,14 @@
 
   function loadTrack(i, autoplay){
     if(i < 0 || i >= TRACKS.length) return;
+    if(TRACKS[i].type !== 'local') return; // embeds are handled by toggleEmbed
+    if(openEmbedIndex !== -1){
+      const prevShell = document.getElementById(`embed-${openEmbedIndex}`);
+      const prevRow = epList.querySelector(`.track-row[data-index="${openEmbedIndex}"]`);
+      if(prevShell){ prevShell.classList.remove('open'); prevShell.querySelector('.embed-inner').innerHTML = ''; }
+      if(prevRow) prevRow.classList.remove('playing');
+      openEmbedIndex = -1;
+    }
     currentTrack = i;
     audio.src = TRACKS[i].src;
     nowTitle.textContent = TRACKS[i].title;
@@ -695,6 +833,47 @@
   });
 
   renderTracks();
+
+  // ---- Upcoming card cover slideshows ----
+  function initCoverSlideshow(cover){
+    const imgs = Array.from(cover.querySelectorAll('img.slide'));
+    if(imgs.length === 0) return;
+
+    // wait for every image to either load or fail (onerror removes it from the DOM)
+    const settled = imgs.map(img => new Promise(resolve=>{
+      if(img.complete) return resolve();
+      img.addEventListener('load', resolve, { once:true });
+      img.addEventListener('error', resolve, { once:true });
+    }));
+
+    Promise.all(settled).then(()=>{
+      const slides = Array.from(cover.querySelectorAll('img.slide'));
+      if(slides.length === 0) return; // none loaded — fallback stays visible
+
+      let dots = null;
+      if(slides.length > 1){
+        dots = document.createElement('div');
+        dots.className = 'slide-dots';
+        slides.forEach(()=>{ const d = document.createElement('span'); dots.appendChild(d); });
+        cover.appendChild(dots);
+      }
+
+      let i = 0;
+      function show(index){
+        slides.forEach((s,j)=> s.classList.toggle('active', j===index));
+        if(dots) Array.from(dots.children).forEach((d,j)=> d.classList.toggle('active', j===index));
+      }
+      show(0);
+
+      if(slides.length > 1){
+        setInterval(()=>{
+          i = (i+1) % slides.length;
+          show(i);
+        }, 3500);
+      }
+    });
+  }
+  document.querySelectorAll('.card-cover').forEach(initCoverSlideshow);
 
   // scroll reveal
   const revealEls = document.querySelectorAll('.reveal');
