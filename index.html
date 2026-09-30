@@ -855,27 +855,92 @@
      ========================================================= */
   const ALBUMS = [
     {
-      id: "bonnie-clyde-vol1",
+      id: "Bonnie & Clyde Vol.1",
       title: "Bonnie & Clyde Vol.1",
       kind: "Album",
+      cover: "covers/bonnie-clyde-vol1.jpg",
+      link: "https://on.soundcloud.com/LD1K7P9gMBk1OasAsx",
+      tracks: [
+        { title: "Hu$tleman", type: "local", src: "audio/01 Track 1.mp3" },
+        { title: "Run this town (ft. Homi)", type: "local", src: "audio/02 Track 2.mp3" },
+        {title: "03 Track 3", type: "local", src: "audio/03 Track 3.mp3"},
+        {title: "04 Track 4", type: "local", src: "audio/04 Track 4.mp3"},
+        {title: "Barrow Gang", type: "local", src: "audio/05 Track 5.mp3"},
+        {title: "Legendary", type: "local", src: "audio/06 Track 6.mp3"},
+        {title: "Step to da plate (ft. Swanny Rivers)", type: "local", src: "audio/07 Track 7.mp3"},
+        {title: "Aha", type: "local", src: "audio/08 Track 8.mp3"},
+        {title: "09 Track 9", type: "local", src: "audio/09 Track 9.mp3"},
+        {title: "B.o.n.n.i.e. & C.l.y.d.e", type: "local", src: "audio/10 Track 10.mp3"},
+        {title: "Hu$tleman Remix (ft. Sauce & Homi)", type: "local", src: "audio/11 Track 11.mp3"},
+        {title: "12 Track 12", type: "local", src: "audio/12 Track 12.mp3"},
+        {title: "I aint serving you (ft. Raf & Noodles)", type: "local", src: "audio/13 Track 13.mp3"},
+        {title: "Gunna Boyz (ft. Raf & Noodles)", type: "local", src: "audio/14 Track 14.mp3"},
+        {title: "Renagade", type: "local", src: "audio/15 Track 15.mp3"},
+      ],
+      
+
+    },
+    // Example for later:
+    {
+      id: "THC The Compilation",
+      title: "THC The Compilation",
+      kind: "Mixtape",
+      cover: "gallery/9445.jpg",
+      // link: "https://on.soundcloud.com/xxxxxxxx",
+      tracks: [ /* ... */ 
+        {title: "1000 ways to kill", type: "local", src: "audio/1000-ways-to-kill-Capital-Punishment-Pt.-2.mp3" },
+        {title: "Can I Stay Here", type: "local", src: "audio/Can-I-Stay-Here.mp3" },
+        {title: "Crown Me King", type: "local", src: "audio/Crown-Me-King.mp3" },
+        {title: "Eminem 2020", type: "local", src: "audio/Eminem-2020.mp3" },
+        {title: "Go Hard or Go Home", type: "local", src: "audio/Go-Hard-or-Go-Home.mp3" },
+        {title: "Hustleman Remix (pt.2)", type: "local", src: "audio/Hustleman-Remix-Pt2.mp3" },
+        {title: "Just Be Me", type: "local", src: "audio/Just-Be-Me-Remix.mp3" },
+        {title: "Just Like You (ft. Richy)", type: "local", src: "audio/Just-Like-You-Ft-Richy.mp3" },
+        {title: "Label Me the Illest", type: "local", src: "audio/Label-Me-the-Ill'est.mp3" },
+        {title: "MF Finished", type: "local", src: "audio/thc mf finished.mp3" },
+        {title: "Rock & Roll (This is How We Rock)", type: "local", src: "audio/Rock&Roll-This-is-How-We-Rock.mp3" },
+        {title: "The A Team", type: "local", src: "audio/The-A-Team.mp3" },
+        {title: "TROUBLE!!!", type: "local", src: "audio/TROUBLE!!!.mp3" },
+        {title: "Underdog pt.2", type: "local", src: "audio/Underdog-pt2.mp3" },
+        {title: "We Are... THC", type: "local", src: "audio/We-Are---THC.mp3" },
+        {title: "Wild as a Mutha", type: "local", src: "audio/Wild-as-a-Mutha.mp3" }
+      ],
+    },
+    {
+      id: "Singles",
+      title: "Singles",
+      kind: "Singles",
       cover: "covers/bonnie-clyde-vol1-cover.jpg",
       link: "https://on.soundcloud.com/LD1K7P9gMBk1OasAsx",
       tracks: [
-        { title: "Squad Up", type: "soundcloud", url: "https://on.soundcloud.com/LD1K7P9gMBk1OasAsx" },
-        { title: "Hit The Ground (prod. by The L)", type: "spotify", src: "audio/track-2.mp3", url: "https://open.spotify.com/track/XXXXXXXXXXXXXXXXXXXXXX" },
-        { title: "Mama",   type: "local", src: "audio/track-3.mp3" },
-        { title: "Track 4", type: "local", src: "audio/track-4.mp3" },
+        { title: "Squad Up", type: "local", src: "audio/SquadUp.mp3" },
+        { title: "Hit The Ground (prod. by The L)", type: "local", src: "audio/HitTheGround.mp3", url: "https://open.spotify.com/track/XXXXXXXXXXXXXXXXXXXXXX" },
+        { title: "Mama",   type: "local", src: "audio/Mama.mp3" }
       ],
+      
+
     },
-    // Example for later:
-    // {
-    //   id: "bonnie-clyde-vol2",
-    //   title: "Bonnie & Clyde Vol.2",
-    //   kind: "EP",
-    //   cover: "covers/bonnie-clyde-vol2-cover.jpg",
-    //   link: "https://on.soundcloud.com/xxxxxxxx",
-    //   tracks: [ /* ... */ ],
-    // },
+    {
+      id: "soundcloud",
+      title: "SoundCloud Releases",
+      kind: "SoundCloud",
+      cover: "covers/",
+      link: "https://on.soundcloud.com/LD1K7P9gMBk1OasAsx",
+      tracks: [
+        { title: "Barrow Gang", type: "soundcloud", url: "https://soundcloud.com/alex-ellerbe-64402251/barrow-gang?si=ad38e2ac272849de90065733c9166a83&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing" },
+        { title: "Step to da plate (ft. Swanny Rivers)", type: "soundcloud",  url: "https://soundcloud.com/alex-ellerbe-64402251/step-to-da-plate-ft-swanny?si=c205ab11b2964cc0878377b48113d775&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing" },
+        { title: "Aha",   type: "soundcloud", url: "https://soundcloud.com/alex-ellerbe-64402251/aha?si=e6f72d0a52474a239299aa58c556f9f3&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing"},
+        { title: "Rollercoaster (ft. Swanny Rivers & Serious", type: "soundcloud", url: "https://soundcloud.com/alex-ellerbe-64402251/rollercoaster-ft-swanny-rivers?si=149f5643ba684e91a1c3ac36410a57ba&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing" },
+        {title: "Legendary", type:"soundcloud", url:"https://soundcloud.com/alex-ellerbe-64402251/legendary?si=75a640b7901242c087490a7d1be247e4&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing"},
+        {title: "B.o.n.n.i.e. & C.l.y.d.e.", type:"soundcloud", url:"https://soundcloud.com/alex-ellerbe-64402251/b-o-n-n-i-e-c-l-y-d-e?si=f97260d6c7504f0493b7d85cfa512e5e&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing"},
+        {title: "Hu$leman Remix (ft. Sauce & Homi)", type:"soundcloud", url:"https://soundcloud.com/alex-ellerbe-64402251/hu-tleman-remix-ft-sauce-and?si=7fff6dce9094472aac9b2746b3bcf37d&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing"},
+        {title: "Lady", type: "soundcloud", url:"https://soundcloud.com/alex-ellerbe-64402251/lady?si=920b1c513ffe442d98057c3cff0f96cf&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing"},
+        {title: "I aint serving you (ft. Raf & Noodles)", type:"soundcloud", url:"https://soundcloud.com/alex-ellerbe-64402251/i-aint-serving-you-ft-raf-and?si=4410cd842a36418baf344f899b955adc&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing"},
+        {title: "Gunna Boyz", type: "soundcloud", url:"https://soundcloud.com/alex-ellerbe-64402251/gunna-boyz-ft-raf-and-noodles?si=335869ba10d1476c89d5b916efe26391&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing"}
+      ],
+      
+
+    },
   ];
 
   let CURRENT_TRACKS = [];
