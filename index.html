@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Alex Ellerbe — A.C.E.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik+Bubbles&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg:#0a0a0b;
@@ -15,6 +18,7 @@
     --grad: linear-gradient(90deg, var(--red), var(--orange));
     --yt-red:#ff0000;
     --sc-orange:#ff5500;
+    --fb-blue:#1877f2;
   }
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth;}
@@ -203,6 +207,100 @@
   }
   .ep-elsewhere a:hover{ border-color:var(--orange); background:rgba(255,122,26,.1); }
 
+  /* ---------- ALBUMS GRID PAGE ---------- */
+  .albums-intro{ padding:48px 6vw 8px; }
+  .albums-intro h2{ font-size:clamp(1.8rem,4vw,3rem); margin-bottom:10px; }
+  .albums-intro p{ color:var(--muted); max-width:520px; line-height:1.6; }
+  .album-grid{
+    display:grid; grid-template-columns:repeat(auto-fill, minmax(160px,1fr)); gap:26px;
+    padding:28px 6vw 100px;
+  }
+  .album-card{ cursor:pointer; transition:transform .25s ease; }
+  .album-card:hover{ transform:translateY(-6px); }
+  .album-cover{
+    position:relative; aspect-ratio:1/1; border-radius:16px; overflow:hidden; margin-bottom:14px;
+    background:var(--grad); box-shadow:0 18px 40px -14px rgba(255,90,20,.4); transition:box-shadow .25s ease;
+  }
+  .album-card:hover .album-cover{ box-shadow:0 24px 55px -14px rgba(255,90,20,.55); }
+  .album-cover img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; }
+  .album-cover .cover-fallback{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-family:'Arial Black',Arial,sans-serif; font-size:1.3rem; color:rgba(10,10,11,.55);
+    text-transform:uppercase; letter-spacing:.04em; text-align:center; padding:10px;
+  }
+  .album-cover .album-play{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    background:rgba(10,10,11,0); transition:background .25s ease;
+  }
+  .album-card:hover .album-play{ background:rgba(10,10,11,.35); }
+  .album-play .circle5{
+    width:52px; height:52px; border-radius:50%; background:var(--grad); display:flex; align-items:center; justify-content:center;
+    opacity:0; transform:scale(.8); transition:opacity .25s ease, transform .25s ease;
+    box-shadow:0 8px 24px -6px rgba(255,90,20,.6);
+  }
+  .album-card:hover .circle5{ opacity:1; transform:scale(1); }
+  .circle5 .tri5{ border-left:14px solid #0a0a0b; border-top:9px solid transparent; border-bottom:9px solid transparent; margin-left:3px; }
+  .album-title{ font-weight:800; font-size:.98rem; line-height:1.3; }
+  .album-kind{ color:var(--orange); font-size:.68rem; text-transform:uppercase; letter-spacing:.15em; margin-top:4px; }
+
+  /* ---------- MEMBERS PAGE ---------- */
+  .members-intro{ padding:48px 6vw 8px; }
+  .members-intro h2{ font-size:clamp(1.8rem,4vw,3rem); margin-bottom:10px; }
+  .members-intro p{ color:var(--muted); max-width:560px; line-height:1.6; }
+
+  .member-grid{
+    display:grid; grid-template-columns:repeat(auto-fill, minmax(220px,1fr)); gap:26px;
+    padding:28px 6vw 10px;
+  }
+  .member-card{
+    background:var(--bg-2); border:1px solid rgba(255,255,255,.07); border-radius:18px; overflow:hidden;
+    transition:transform .3s ease, border-color .3s ease;
+  }
+  .member-card:hover{ transform:translateY(-6px); border-color:rgba(255,122,26,.45); }
+  .member-photo{ position:relative; aspect-ratio:1/1; background:var(--grad); overflow:hidden; }
+  .member-photo img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; }
+  .member-photo .cover-fallback{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-family:'Arial Black',Arial,sans-serif; font-size:1.6rem; color:rgba(10,10,11,.55);
+    text-transform:uppercase; letter-spacing:.04em;
+  }
+  .member-slot{ position:relative; }
+  .tribute-tag{
+    position:absolute; top:-24px; left:12px; z-index:6;
+    font-family:'Rubik Bubbles', 'Arial Black', sans-serif;
+    font-size:1.5rem; line-height:1; letter-spacing:.02em;
+    color:#fff;
+    -webkit-text-stroke: 1.5px #000;
+    text-shadow:
+      -2px 0 0 #000, 2px 0 0 #000, 0 -2px 0 #000, 0 2px 0 #000,
+      -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000,
+      0 6px 10px rgba(0,0,0,.5);
+    transform:rotate(-6deg);
+    pointer-events:none;
+    white-space:nowrap;
+  }
+  .member-info{ padding:20px 22px 24px; }
+  .member-name{ font-weight:800; font-size:1.15rem; text-transform:uppercase; letter-spacing:.02em; margin-bottom:3px; }
+  .member-role{ color:var(--orange); font-size:.7rem; text-transform:uppercase; letter-spacing:.16em; margin-bottom:12px; }
+  .member-bio{ color:var(--muted); font-size:.88rem; line-height:1.65; }
+
+  .gallery-section{ padding:36px 6vw 100px; }
+  .gallery-section h3{ font-size:clamp(1.4rem,3vw,2rem); margin-bottom:8px; }
+  .gallery-section .gallery-sub{ color:var(--muted); font-size:.92rem; margin-bottom:26px; }
+  .gallery-grid{
+    display:grid; grid-template-columns:repeat(auto-fill, minmax(170px,1fr)); gap:16px;
+  }
+  .gallery-item{
+    position:relative; aspect-ratio:1/1; border-radius:14px; overflow:hidden; background:var(--bg-2);
+    border:1px solid rgba(255,255,255,.07); transition:transform .3s ease, border-color .3s ease;
+  }
+  .gallery-item:hover{ transform:translateY(-4px); border-color:rgba(255,122,26,.4); }
+  .gallery-item img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; }
+  .gallery-item .cover-fallback{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-size:.7rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted);
+  }
+
   .now-bar{
     position:fixed; left:0; right:0; bottom:0; z-index:6;
     background:rgba(14,14,15,.96); backdrop-filter:blur(10px); border-top:1px solid rgba(255,255,255,.08);
@@ -297,6 +395,34 @@
   .sc-badge:hover{ transform:translateY(-3px) scale(1.03); }
   .sc-copy p{ color:var(--muted); line-height:1.7; margin:18px 0 30px; max-width:440px; }
 
+  /* ---------- FACEBOOK SECTION ---------- */
+  #facebook{ background:linear-gradient(180deg, #0a0a0b, #051a30 60%, #0a0a0b); }
+  .fb-wrap{
+    display:grid; grid-template-columns:1.3fr .9fr; gap:56px; align-items:center;
+  }
+  @media (max-width:900px){ .fb-wrap{ grid-template-columns:1fr; } }
+  .fb-panel{
+    position:relative; border-radius:18px; overflow:hidden; aspect-ratio:16/9; background:#000;
+    border:1px solid rgba(24,119,242,.3);
+    box-shadow:0 25px 70px -20px rgba(24,119,242,.45);
+    display:flex; align-items:center; justify-content:center;
+    background:
+      radial-gradient(circle at 30% 30%, rgba(24,119,242,.4), transparent 60%),
+      radial-gradient(circle at 75% 70%, rgba(66,165,245,.28), transparent 55%),
+      #0a0e14;
+    transition:filter .3s ease, transform .5s ease;
+  }
+  .fb-panel:hover{ filter:brightness(1.15); transform:scale(1.02); }
+  .fb-panel .fb-mark{ width:88px; height:88px; flex-shrink:0; }
+  .fb-badge{
+    display:inline-flex; align-items:center; gap:14px; padding:16px 26px; border-radius:100px;
+    background:var(--fb-blue); color:#fff; font-weight:800; letter-spacing:.03em; text-transform:uppercase; font-size:.9rem;
+    box-shadow:0 10px 30px -8px rgba(24,119,242,.6);
+    transition:transform .25s ease;
+  }
+  .fb-badge:hover{ transform:translateY(-3px) scale(1.03); }
+  .fb-copy p{ color:var(--muted); line-height:1.7; margin:18px 0 30px; max-width:440px; }
+
   /* ---------- UPCOMING ---------- */
   #upcoming{ background:var(--bg); }
   .cards{ display:grid; grid-template-columns:repeat(3,1fr); gap:26px; }
@@ -382,6 +508,7 @@
   <a href="#hero" data-label="Home" class="active"></a>
   <a href="#video" data-label="Video"></a>
   <a href="#soundcloud" data-label="SoundCloud"></a>
+  <a href="#facebook" data-label="Facebook"></a>
   <a href="#upcoming" data-label="Upcoming"></a>
   <a href="#support" data-label="Support"></a>
 </nav>
@@ -395,24 +522,95 @@
     <p class="hero-sub">New sounds, new visuals, and a movement built from the ground up. Stream the latest work and follow along for what's next.</p>
     <div class="hero-actions">
       <button class="btn" id="openPlayer"><span class="play-ico"></span> Listen to EP</button>
-      <a class="btn ghost" href="#video">Watch the Video ↓</a>
+      <button class="btn ghost" id="openMembers">Meet The Camp</button>
     </div>
   </div>
   <div class="scroll-cue"><span class="line"></span> Scroll</div>
 </section>
 
-<!-- LISTEN TO EP — CUSTOM PLAYER PAGE -->
+<!-- ALBUMS — GRID OF ALL RELEASES -->
+<div class="ep-page" id="albumsPage">
+  <div class="ep-topbar">
+    <button class="ep-back" id="albumsClose">&larr; Back</button>
+    <div style="color:var(--muted); font-size:.8rem; letter-spacing:.15em; text-transform:uppercase;">Discography</div>
+  </div>
+
+  <div class="albums-intro">
+    <h2>Albums &amp; EPs</h2>
+    <p>Pick a release to open its tracklist and start streaming.</p>
+  </div>
+
+  <div class="album-grid" id="albumGrid"><!-- album cards injected by script --></div>
+</div>
+
+<!-- MEMBERS — MEET THE CAMP -->
+<div class="ep-page" id="membersPage">
+  <div class="ep-topbar">
+    <button class="ep-back" id="membersClose">&larr; Back</button>
+    <div style="color:var(--muted); font-size:.8rem; letter-spacing:.15em; text-transform:uppercase;">The Camp</div>
+  </div>
+
+  <div class="members-intro">
+    <h2>Meet TH0R0 HEART CAMP</h2>
+    <p>The crew behind the sound — five voices, one movement.</p>
+  </div>
+
+  <div class="member-grid" id="memberGrid"><!-- member cards injected by script --></div>
+
+  <div class="gallery-section">
+    <h3>Gallery</h3>
+    <div class="gallery-sub">A few shots of the camp.</div>
+    <!--
+      GALLERY — add, remove, or reorder photos by editing these blocks
+      directly. Each one is a self-contained "slot":
+        1. Change the src="..." to point at your image file.
+        2. Change the alt="..." to a short description of the photo.
+      A slot with no working image just shows a "Photo" placeholder
+      tile instead of a broken image icon — safe to leave as-is
+      until you have the real picture. Copy/paste a whole block to
+      add more slots.
+    -->
+    <div class="gallery-grid" id="galleryGrid">
+      <div class="gallery-item">
+        <div class="cover-fallback">Photo</div>
+        <img src="gallery/9444.jpg" alt="Gallery photo 1" onerror="this.remove()">
+      </div>
+      <div class="gallery-item">
+        <div class="cover-fallback">Photo</div>
+        <img src="gallery/9443.jpg" alt="Gallery photo 2" onerror="this.remove()">
+      </div>
+      <div class="gallery-item">
+        <div class="cover-fallback">Photo</div>
+        <img src="gallery/9445.jpg" alt="Gallery photo 3" onerror="this.remove()">
+      </div>
+      <!-- <div class="gallery-item">
+        <div class="cover-fallback">Photo</div>
+        <img src="gallery/photo-4.jpg" alt="Gallery photo 4" onerror="this.remove()">
+      </div>
+      <div class="gallery-item">
+        <div class="cover-fallback">Photo</div>
+        <img src="gallery/photo-5.jpg" alt="Gallery photo 5" onerror="this.remove()">
+      </div>
+      <div class="gallery-item">
+        <div class="cover-fallback">Photo</div>
+        <img src="gallery/photo-6.jpg" alt="Gallery photo 6" onerror="this.remove()">
+      </div> -->
+    </div>
+  </div>
+</div>
+
+<!-- LISTEN TO EP — CUSTOM PLAYER PAGE (scoped to whichever album was opened) -->
 <div class="ep-page" id="epPage">
   <div class="ep-topbar">
-    <button class="ep-back" id="epClose">&larr; Back</button>
+    <button class="ep-back" id="epClose">&larr; Albums</button>
     <div style="color:var(--muted); font-size:.8rem; letter-spacing:.15em; text-transform:uppercase;">Now Streaming</div>
   </div>
 
   <div class="ep-hero">
-    <div class="ep-cover">A.C.E.</div>
+    <div class="ep-cover" id="epCoverFallback">A.C.E.</div>
     <div class="ep-meta">
-      <div class="ep-kind">EP</div>
-      <h2>Bonnie & Clyde Vol.2 (Early Access)</h2>
+      <div class="ep-kind" id="epKind">EP</div>
+      <h2 id="epTitle">—</h2>
       <div class="ep-artist">Alex Ellerbe</div>
       <div class="ep-stats"><span><b id="epTrackCount">0</b> tracks</span><span id="epTotalDur">--:-- total</span></div>
     </div>
@@ -421,8 +619,8 @@
   <div class="ep-list" id="epList"><!-- track rows injected by script --></div>
 
   <div class="ep-elsewhere">
-    <a href="https://on.soundcloud.com/LD1K7P9gMBk1OasAsx" target="_blank" rel="noopener" style="color:var(--sc-orange);">Also on SoundCloud</a>
-    
+    <a href="https://on.soundcloud.com/LD1K7P9gMBk1OasAsx" target="_blank" rel="noopener" style="color:var(--sc-orange);" id="epAlsoLink">Also on SoundCloud</a>
+
   </div>
 
   <div class="now-bar" id="nowBar">
@@ -494,16 +692,39 @@
   </div>
 </section>
 
+<!-- FACEBOOK -->
+<section id="facebook">
+  <div class="section-label"><span class="n">04</span> On Facebook</div>
+  <div class="fb-wrap">
+    <div class="fb-panel reveal">
+      <img src="thcfacebook.png">
+      <!-- <svg class="fb-mark" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="18" cy="18" r="18" fill="#1877F2"/>
+        <path d="M24.5 18h-4.2v11.6h-4.8V18h-3v-4.1h3v-2.6c0-3 1.5-4.9 5.3-4.9h3.2v4.2h-2c-1.5 0-1.7.6-1.7 1.6v1.7h3.9l-.5 4.1z" fill="#fff"/>
+      </svg> -->
+    </div>
+    <div class="fb-copy reveal">
+      <h2 class="section-title" style="margin-bottom:0;">Follow On<br>Facebook</h2>
+      <p>Catch updates, new posts, and everything THC is working on straight from the source.</p>
+      <a class="fb-badge" href="https://www.facebook.com/share/1HtD13PHNH/" target="_blank" rel="noopener">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06C2 17.08 5.66 21.24 10.44 22v-7.03H7.9v-2.91h2.54V9.85c0-2.5 1.5-3.89 3.78-3.89 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.44 2.91h-2.34V22C18.34 21.24 22 17.08 22 12.06z" fill="#fff"/>
+        </svg>
+        Follow on Facebook
+      </a>
+    </div>
+  </div>
+</section>
+
 <!-- UPCOMING -->
 <section id="upcoming">
-  <div class="section-label"><span class="n">04</span> What's Next</div>
+  <div class="section-label"><span class="n">05</span> What's Next</div>
   <h2 class="section-title reveal">Upcoming</h2>
   <div class="cards">
     <div class="card reveal">
       <div class="card-cover">
         <div class="cover-fallback">EP</div>
         <img class="slide" src="covers/bonnie-clyde-vol2-1.jpg" alt="Bonnie & Clyde vol.2 cover art 1" onerror="this.remove()">
-        <img class="slide" src="covers/bonnie-clyde-vol1.jpg" alt="Bonnie & Clyde vol.2 cover art 2" onerror="this.remove()">
         <img class="slide" src="covers/bonnie-clyde-vol2-3.jpg" alt="Bonnie & Clyde vol.2 cover art 3" onerror="this.remove()">
       </div>
       <span class="tag">EP</span>
@@ -542,7 +763,7 @@
 
 <!-- SUPPORT -->
 <section id="support">
-  <div class="section-label" style="justify-content:center;"><span class="n">05</span> Support The Movement</div>
+  <div class="section-label" style="justify-content:center;"><span class="n">06</span> Support The Movement</div>
   <h2 class="section-title reveal">Support Me</h2>
   <p class="support-copy reveal">Every bit of support goes straight back into new music, videos, and shows. If you rock with the sound, consider showing love below.</p>
   <div class="support-options">
@@ -578,6 +799,9 @@
     <div class="social-row">
       <a class="social-btn" href="https://www.instagram.com/th0r0_heart_camp?stkn=eHJjbjl0bzcwdW43" aria-label="Instagram" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.3" cy="6.7" r="1.1" fill="currentColor" stroke="none"/></svg>
+      </a>
+      <a class="social-btn" href="https://www.facebook.com/share/1HtD13PHNH/" aria-label="Facebook" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06C2 17.08 5.66 21.24 10.44 22v-7.03H7.9v-2.91h2.54V9.85c0-2.5 1.5-3.89 3.78-3.89 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.44 2.91h-2.34V22C18.34 21.24 22 17.08 22 12.06z"/></svg>
       </a>
       <a class="social-btn" href="#" aria-label="TikTok" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14.5 2h2.6c.2 1.6 1.1 3 2.4 3.9 1 .7 2.1 1.1 3.3 1.2v2.7c-1.5 0-2.9-.4-4.2-1.2v6.5c0 3.4-2.7 6.1-6.1 6.1S6.4 18.5 6.4 15.1c0-3.2 2.5-5.8 5.6-6.1v2.8c-1.6.3-2.8 1.7-2.8 3.3 0 1.9 1.5 3.4 3.4 3.4s3.4-1.5 3.4-3.4V2z"/></svg>
@@ -620,14 +844,60 @@
 
      Only "local" tracks use the audio/ folder — embed tracks need no file at all.
      ========================================================= */
-  const TRACKS = [
-    { title: "Squad Up", type: "soundcloud", url: "https://on.soundcloud.com/LD1K7P9gMBk1OasAsx" },
-    { title: "Hit The Ground (prod. by The L)", type: "spotify", src: "audio/track-2.mp3",url: "https://open.spotify.com/track/XXXXXXXXXXXXXXXXXXXXXX" },
-    { title: "Mama",   type: "local", src: "audio/track-3.mp3" },
-    { title: "Track 4", type: "local", src: "audio/track-4.mp3" },
-    // Example once a track is live on Spotify:
-    // { title: "Track 5", type: "spotify", url: "https://open.spotify.com/track/XXXXXXXXXXXXXXXXXXXXXX" },
+  /* =========================================================
+     ALBUMS — one entry per release. Each has its own cover art
+     and its own tracklist (using the same track "type" rules as
+     before: local / soundcloud / spotify — see notes above).
+
+     To add another release later (like Bonnie & Clyde Vol.2 once
+     it drops), just copy one of these objects, give it a unique
+     id, its own cover image, and its own tracks array.
+     ========================================================= */
+  const ALBUMS = [
+    {
+      id: "bonnie-clyde-vol1",
+      title: "Bonnie & Clyde Vol.1",
+      kind: "Album",
+      cover: "covers/bonnie-clyde-vol1-cover.jpg",
+      link: "https://on.soundcloud.com/LD1K7P9gMBk1OasAsx",
+      tracks: [
+        { title: "Squad Up", type: "soundcloud", url: "https://on.soundcloud.com/LD1K7P9gMBk1OasAsx" },
+        { title: "Hit The Ground (prod. by The L)", type: "spotify", src: "audio/track-2.mp3", url: "https://open.spotify.com/track/XXXXXXXXXXXXXXXXXXXXXX" },
+        { title: "Mama",   type: "local", src: "audio/track-3.mp3" },
+        { title: "Track 4", type: "local", src: "audio/track-4.mp3" },
+      ],
+    },
+    // Example for later:
+    // {
+    //   id: "bonnie-clyde-vol2",
+    //   title: "Bonnie & Clyde Vol.2",
+    //   kind: "EP",
+    //   cover: "covers/bonnie-clyde-vol2-cover.jpg",
+    //   link: "https://on.soundcloud.com/xxxxxxxx",
+    //   tracks: [ /* ... */ ],
+    // },
   ];
+
+  let CURRENT_TRACKS = [];
+  let currentAlbumIndex = -1;
+
+  /* =========================================================
+     MEMBERS — one entry per person, shown on the "Meet The Camp"
+     page. Put each photo at the path given in `photo`; if it's
+     missing, a placeholder with their initial shows instead.
+     Edit the `bio` text directly — plain sentences, no markup needed.
+     ========================================================= */
+  const MEMBERS = [
+    { name: "A.C.E.",   role: "Vocals", photo: "members/ace.jpg",   bio: "A.C.E. biography goes here." },
+    { name: "Iceman",   role: "Vocals", photo: "members/iceman.jpg", bio: "Iceman biography goes here." },
+    { name: "Rell",     role: "Vocals", photo: "members/rell.jpg",   bio: "Rell biography goes here." },
+    { name: "Nawtee",   role: "Vocals", photo: "members/nawtee.jpg", bio: "Nawtee biography goes here.", tribute: "R.I.P. Nawtee" },
+    { name: "Traum",    role: "Vocals", photo: "members/traum.jpg",  bio: "Traum biography goes here." },
+  ];
+
+  // Gallery photos are now plain HTML in the Members page markup (see the
+  // .gallery-grid block) rather than generated from a JS array — edit the
+  // <img> tags there directly to add, remove, or change photos.
 
   function soundcloudEmbedSrc(url){
     return `https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}&color=%23ff7a1a&auto_play=true&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=false`;
@@ -645,6 +915,13 @@
   const epList = document.getElementById('epList');
   const epTrackCount = document.getElementById('epTrackCount');
   const epTotalDur = document.getElementById('epTotalDur');
+  const epTitle = document.getElementById('epTitle');
+  const epKind = document.getElementById('epKind');
+  const epAlsoLink = document.getElementById('epAlsoLink');
+  const albumGrid = document.getElementById('albumGrid');
+  const albumsPage = document.getElementById('albumsPage');
+  const memberGrid = document.getElementById('memberGrid');
+  const membersPage = document.getElementById('membersPage');
   const nowBar = document.getElementById('nowBar');
   const nowTitle = document.getElementById('nowTitle');
   const nowPlayBtn = document.getElementById('nowPlayBtn');
@@ -665,9 +942,54 @@
     return html;
   }
 
+  function renderAlbums(){
+    albumGrid.innerHTML = ALBUMS.map((a,i)=>`
+      <div class="album-card" data-album-index="${i}">
+        <div class="album-cover">
+          <div class="cover-fallback">${a.kind}</div>
+          <img src="${a.cover}" alt="${a.title} cover art" onerror="this.remove()">
+          <div class="album-play"><div class="circle5"><span class="tri5"></span></div></div>
+        </div>
+        <div class="album-title">${a.title}</div>
+        <div class="album-kind">${a.kind} &middot; ${a.tracks.length} tracks</div>
+      </div>
+    `).join('');
+
+    albumGrid.querySelectorAll('.album-card').forEach(card=>{
+      card.addEventListener('click', ()=> openAlbum(parseInt(card.dataset.albumIndex, 10)));
+    });
+  }
+
+  function openAlbum(i){
+    const album = ALBUMS[i];
+    if(!album) return;
+    currentAlbumIndex = i;
+    CURRENT_TRACKS = album.tracks;
+
+    epKind.textContent = album.kind;
+    epTitle.textContent = album.title;
+    if(epAlsoLink){
+      epAlsoLink.href = album.link || '#';
+      epAlsoLink.textContent = 'Also on SoundCloud';
+    }
+
+    // reset player state for the newly opened album
+    if(openEmbedIndex !== -1){ openEmbedIndex = -1; }
+    if(!audio.paused) audio.pause();
+    audio.removeAttribute('src');
+    currentTrack = -1;
+    isPlaying = false;
+    nowBar.classList.remove('show');
+
+    renderTracks();
+
+    albumsPage.classList.remove('open');
+    epPage.classList.add('open');
+  }
+
   function renderTracks(){
-    epTrackCount.textContent = TRACKS.length;
-    epList.innerHTML = TRACKS.map((t,i)=>{
+    epTrackCount.textContent = CURRENT_TRACKS.length;
+    epList.innerHTML = CURRENT_TRACKS.map((t,i)=>{
       const isEmbed = t.type === 'soundcloud' || t.type === 'spotify';
       const durCell = isEmbed
         ? `<div class="track-dur platform-badge" data-dur-for="${i}">${t.type}</div>`
@@ -693,7 +1015,7 @@
     epList.querySelectorAll('.track-row').forEach(row=>{
       row.addEventListener('click', ()=>{
         const i = parseInt(row.dataset.index, 10);
-        const t = TRACKS[i];
+        const t = CURRENT_TRACKS[i];
         if(t.type === 'soundcloud' || t.type === 'spotify'){
           toggleEmbed(i);
         } else if(currentTrack === i){
@@ -705,7 +1027,7 @@
     });
 
     // probe durations quietly without playing — local tracks only
-    TRACKS.forEach((t, i)=>{
+    CURRENT_TRACKS.forEach((t, i)=>{
       if(t.type !== 'local') return;
       const probe = new Audio();
       probe.preload = 'metadata';
@@ -723,7 +1045,7 @@
 
   let openEmbedIndex = -1;
   function toggleEmbed(i){
-    const t = TRACKS[i];
+    const t = CURRENT_TRACKS[i];
     const shell = document.getElementById(`embed-${i}`);
     const row = epList.querySelector(`.track-row[data-index="${i}"]`);
     const inner = shell.querySelector('.embed-inner');
@@ -775,8 +1097,8 @@
   }
 
   function loadTrack(i, autoplay){
-    if(i < 0 || i >= TRACKS.length) return;
-    if(TRACKS[i].type !== 'local') return; // embeds are handled by toggleEmbed
+    if(i < 0 || i >= CURRENT_TRACKS.length) return;
+    if(CURRENT_TRACKS[i].type !== 'local') return; // embeds are handled by toggleEmbed
     if(openEmbedIndex !== -1){
       const prevShell = document.getElementById(`embed-${openEmbedIndex}`);
       const prevRow = epList.querySelector(`.track-row[data-index="${openEmbedIndex}"]`);
@@ -785,8 +1107,8 @@
       openEmbedIndex = -1;
     }
     currentTrack = i;
-    audio.src = TRACKS[i].src;
-    nowTitle.textContent = TRACKS[i].title;
+    audio.src = CURRENT_TRACKS[i].src;
+    nowTitle.textContent = CURRENT_TRACKS[i].title;
     nowBar.classList.add('show');
     if(autoplay){
       audio.play().catch(()=>{ /* file not added yet, or blocked until user gesture */ });
@@ -806,33 +1128,82 @@
     if(audio.duration){ seekRange.value = (audio.currentTime / audio.duration) * 100; }
   });
   audio.addEventListener('loadedmetadata', ()=>{ durTimeEl.textContent = formatTime(audio.duration); });
-  audio.addEventListener('ended', ()=>{ loadTrack((currentTrack + 1) % TRACKS.length, true); });
+  audio.addEventListener('ended', ()=>{ loadTrack((currentTrack + 1) % CURRENT_TRACKS.length, true); });
 
   nowPlayBtn.addEventListener('click', togglePlay);
-  document.getElementById('prevBtn').addEventListener('click', ()=> loadTrack((currentTrack - 1 + TRACKS.length) % TRACKS.length, true));
-  document.getElementById('nextBtn').addEventListener('click', ()=> loadTrack((currentTrack + 1) % TRACKS.length, true));
+  document.getElementById('prevBtn').addEventListener('click', ()=> loadTrack((currentTrack - 1 + CURRENT_TRACKS.length) % CURRENT_TRACKS.length, true));
+  document.getElementById('nextBtn').addEventListener('click', ()=> loadTrack((currentTrack + 1) % CURRENT_TRACKS.length, true));
   seekRange.addEventListener('input', ()=>{
     if(audio.duration){ audio.currentTime = (seekRange.value / 100) * audio.duration; }
   });
 
-  // open / close the EP page
+  // open / close the Albums page and the EP (tracklist) page
   const epPage = document.getElementById('epPage');
-  document.getElementById('openPlayer').addEventListener('click', ()=>{
-    epPage.classList.add('open');
-    document.body.style.overflow = 'hidden';
-  });
-  document.getElementById('epClose').addEventListener('click', ()=>{
-    epPage.classList.remove('open');
-    document.body.style.overflow = '';
-  });
-  document.addEventListener('keydown', (e)=>{
-    if(e.key === 'Escape' && epPage.classList.contains('open')){
-      epPage.classList.remove('open');
-      document.body.style.overflow = '';
-    }
-  });
 
-  renderTracks();
+  function openAlbumsPage(){
+    renderAlbums();
+    albumsPage.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeAlbumsPage(){
+    albumsPage.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  function backToAlbumsFromPlayer(){
+    // stop whatever's playing before leaving the tracklist
+    if(!audio.paused) audio.pause();
+    if(openEmbedIndex !== -1){
+      const prevShell = document.getElementById(`embed-${openEmbedIndex}`);
+      if(prevShell){ prevShell.classList.remove('open'); prevShell.querySelector('.embed-inner').innerHTML = ''; }
+      openEmbedIndex = -1;
+    }
+    nowBar.classList.remove('show');
+    epPage.classList.remove('open');
+    albumsPage.classList.add('open');
+  }
+
+  document.getElementById('openPlayer').addEventListener('click', openAlbumsPage);
+  document.getElementById('albumsClose').addEventListener('click', closeAlbumsPage);
+  document.getElementById('epClose').addEventListener('click', backToAlbumsFromPlayer);
+
+  // ---- Members page ("Meet The Camp") ----
+  function renderMembers(){
+    memberGrid.innerHTML = MEMBERS.map(m=>`
+      <div class="member-slot">
+        ${m.tribute ? `<div class="tribute-tag">${m.tribute}</div>` : ''}
+        <div class="member-card">
+          <div class="member-photo">
+            <div class="cover-fallback">${m.name.charAt(0)}</div>
+            <img src="${m.photo}" alt="${m.name}" onerror="this.remove()">
+          </div>
+          <div class="member-info">
+            <div class="member-name">${m.name}</div>
+            <div class="member-role">${m.role}</div>
+            <div class="member-bio">${m.bio}</div>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function openMembersPage(){
+    renderMembers();
+    membersPage.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeMembersPage(){
+    membersPage.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  document.getElementById('openMembers').addEventListener('click', openMembersPage);
+  document.getElementById('membersClose').addEventListener('click', closeMembersPage);
+
+  document.addEventListener('keydown', (e)=>{
+    if(e.key !== 'Escape') return;
+    if(epPage.classList.contains('open')){ backToAlbumsFromPlayer(); }
+    else if(albumsPage.classList.contains('open')){ closeAlbumsPage(); }
+    else if(membersPage.classList.contains('open')){ closeMembersPage(); }
+  });
 
   // ---- Upcoming card cover slideshows ----
   function initCoverSlideshow(cover){
@@ -883,7 +1254,7 @@
   revealEls.forEach(el=>io.observe(el));
 
   // nav dots active state
-  const sections = ['hero','video','soundcloud','upcoming','support'].map(id=>document.getElementById(id));
+  const sections = ['hero','video','soundcloud','facebook','upcoming','support'].map(id=>document.getElementById(id));
   const dots = document.querySelectorAll('.navdots a');
   const navIo = new IntersectionObserver((entries)=>{
     entries.forEach(entry=>{
