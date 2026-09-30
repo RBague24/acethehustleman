@@ -66,6 +66,21 @@
   .reveal.in{ opacity:1; transform:translateY(0); }
 
   /* ---------- HERO ---------- */
+  .advisory-spot{
+    position:absolute; top:22px; right:22px; z-index:5;
+    width:110px; aspect-ratio:3/2; border-radius:4px; overflow:hidden;
+    background:#000; border:2px solid #fff; box-shadow:0 10px 26px -10px rgba(0,0,0,.7);
+  }
+  .advisory-spot img{ position:absolute; inset:0; width:100%; height:100%; object-fit:contain; display:block; }
+  .advisory-spot .cover-fallback{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center; text-align:center;
+    font-family:'Arial Black',Arial,sans-serif; font-size:.56rem; color:#fff; text-transform:uppercase;
+    letter-spacing:.05em; padding:4px; line-height:1.3;
+  }
+  @media (max-width:700px){
+    .advisory-spot{ top:14px; right:14px; width:80px; }
+    .advisory-spot .cover-fallback{ font-size:.44rem; }
+  }
   #hero{
     background:
       radial-gradient(ellipse at 20% 20%, rgba(224,38,60,.25), transparent 55%),
@@ -152,10 +167,13 @@
     flex-wrap:wrap;
   }
   .ep-cover{
-    width:180px; height:180px; border-radius:16px; flex-shrink:0; background:var(--grad);
-    box-shadow:0 20px 50px -12px rgba(255,90,20,.5);
-    display:flex; align-items:center; justify-content:center;
-    font-family:'Arial Black',Arial,sans-serif; font-size:2.4rem; color:#0a0a0b;
+    position:relative; width:180px; height:180px; border-radius:16px; flex-shrink:0; background:var(--grad);
+    box-shadow:0 20px 50px -12px rgba(255,90,20,.5); overflow:hidden;
+  }
+  .ep-cover img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; }
+  .ep-cover .cover-fallback{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-family:'Arial Black',Arial,sans-serif; font-size:2.4rem; color:#0a0a0b; text-transform:uppercase;
   }
   .ep-meta .ep-kind{ font-size:.78rem; letter-spacing:.25em; text-transform:uppercase; color:var(--orange); margin-bottom:10px; }
   .ep-meta h2{ font-size:clamp(1.8rem,4vw,3rem); margin-bottom:10px; }
@@ -339,12 +357,34 @@
     display:grid; grid-template-columns:1.3fr .9fr; gap:56px; align-items:center;
   }
   @media (max-width:900px){ .video-wrap{ grid-template-columns:1fr; } }
-  .video-frame{
+  .video-carousel{
     position:relative; border-radius:18px; overflow:hidden; aspect-ratio:16/9; background:#000;
     border:1px solid rgba(255,0,0,.25);
     box-shadow:0 25px 70px -20px rgba(255,0,0,.35);
   }
+  .video-track{ display:flex; width:100%; height:100%; transition:transform .5s ease; }
+  .video-frame{
+    position:relative; flex:0 0 100%; width:100%; height:100%; background:#000; overflow:hidden;
+  }
   .video-frame iframe{ width:100%; height:100%; border:0; }
+  .vid-arrow{
+    position:absolute; top:50%; transform:translateY(-50%); z-index:6;
+    width:40px; height:40px; border-radius:50%; border:none; cursor:pointer;
+    background:rgba(0,0,0,.55); color:#fff; font-size:1rem; display:flex; align-items:center; justify-content:center;
+    transition:background .2s ease;
+  }
+  .vid-arrow:hover{ background:rgba(224,38,60,.85); }
+  .vid-arrow.prev{ left:12px; }
+  .vid-arrow.next{ right:12px; }
+  .vid-dots{
+    position:absolute; bottom:14px; left:0; right:0; z-index:6;
+    display:flex; justify-content:center; gap:8px;
+  }
+  .vid-dots span{
+    width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,.4); cursor:pointer;
+    transition:background .2s ease, transform .2s ease; display:inline-block;
+  }
+  .vid-dots span.active{ background:#ff2b3d; transform:scale(1.25); }
   .video-frame a.thumb-link{ position:absolute; inset:0; display:block; }
   .video-frame .thumb{
     width:100%; height:100%; display:flex; align-items:center; justify-content:center; text-align:center; padding:24px;
@@ -515,6 +555,16 @@
 
 <!-- HERO -->
 <section id="hero">
+  <!--
+    PARENTAL ADVISORY IMAGE SPOT — top right corner of the hero.
+    Change the src="..." below to point at your advisory image file.
+    If the image doesn't load yet, this just shows a placeholder box
+    instead of a broken image icon.
+  -->
+  <div class="advisory-spot">
+    <div class="cover-fallback">Parental Advisory Image Here</div>
+    <img src="gallery/Parental_Advisory_label.svg.png" alt="Parental Advisory" onerror="this.remove()">
+  </div>
   <div class="reveal in">
     <div class="kicker">Recording Artist &middot; Producer</div>
     <h1 class="hero-title">Th0r0 Heart<br>Camp</h1>
@@ -607,7 +657,7 @@
   </div>
 
   <div class="ep-hero">
-    <div class="ep-cover" id="epCoverFallback">A.C.E.</div>
+    <div class="ep-cover" id="epCoverFallback"></div>
     <div class="ep-meta">
       <div class="ep-kind" id="epKind">EP</div>
       <h2 id="epTitle">—</h2>
@@ -649,14 +699,48 @@
 <section id="video">
   <div class="section-label"><span class="n">02</span> Latest Visual</div>
   <div class="video-wrap">
-    <div class="video-frame reveal">
-      <div class="thumb">
-        <div>
-          <img src="ace.png" alt="Alex Ellerbe - Still Mobbin">
+    <div class="video-carousel reveal">
+      <!--
+        VIDEOS — add, remove, or reorder videos by editing these ".video-frame"
+        blocks directly. Each one is a self-contained slide:
+          1. Change the <img src="..."> to that video's thumbnail image.
+          2. Change the <a class="thumb-link" href="..."> to the YouTube link.
+          3. Update the alt text / aria-label to match.
+        To add another video, copy a whole ".video-frame" block (including its
+        closing </div>) and paste it right before the </div> that closes
+        #videoTrack, then edit the copy.
+        A slide with no thumb-link yet (like the second one below) just shows
+        a "Coming Soon" placeholder tile and isn't clickable — add the link
+        once that video is ready.
+      -->
+      <div class="video-track" id="videoTrack">
+        <div class="video-frame">
+          <div class="thumb">
+            <div>
+              <img src="ace.png" alt="Alex Ellerbe - Still Mobbin">
+            </div>
+          </div>
+          <div class="play-overlay"><div class="circle"><span class="tri2"></span></div></div>
+          <a class="thumb-link" href="https://youtu.be/DxrhX-ZfcTM?is=oAJbWzRPrp6xIuSU" target="_blank" rel="noopener" aria-label="Watch music video on YouTube"></a>
+        
+        </div>
+
+        <div class="video-frame">
+          <div class="thumb">
+            <div>
+              <img src="coast2coast.png" alt="Alex Ellerbe - Coast 2 Coast">
+            </div>
+          </div>
+          <div class="play-overlay"><div class="circle"><span class="tri2"></span></div></div>
+          <!-- no thumb-link yet — add one here once this video is ready, e.g.:
+          -->
+          <a class="thumb-link" href="https://youtu.be/A0xVAP3Y3w4?is=o4DNBbwQq8Xt6nrC" target="_blank" rel="noopener" aria-label="Watch music video on YouTube"></a>
+
         </div>
       </div>
-      <div class="play-overlay"><div class="circle"><span class="tri2"></span></div></div>
-      <a class="thumb-link" href="https://youtu.be/DxrhX-ZfcTM?is=oAJbWzRPrp6xIuSU" target="_blank" rel="noopener" aria-label="Watch music video on YouTube"></a>
+      <button class="vid-arrow prev" id="vidPrev" aria-label="Previous video">&#10094;</button>
+      <button class="vid-arrow next" id="vidNext" aria-label="Next video">&#10095;</button>
+      <div class="vid-dots" id="vidDots"></div>
     </div>
     <div class="video-copy reveal">
       <h2 class="section-title" style="margin-bottom:0;">The Latest<br>Music Video</h2>
@@ -863,16 +947,16 @@
       tracks: [
         { title: "Hu$tleman", type: "local", src: "audio/01 Track 1.mp3" },
         { title: "Run this town (ft. Homi)", type: "local", src: "audio/02 Track 2.mp3" },
-        {title: "03 Track 3", type: "local", src: "audio/03 Track 3.mp3"},
-        {title: "04 Track 4", type: "local", src: "audio/04 Track 4.mp3"},
+        {title: "Do you have the time? (Prod. by Sap)", type: "local", src: "audio/03 Track 3.mp3"},
+        {title: "One for the Money (Prod. by Sap)", type: "local", src: "audio/04 Track 4.mp3"},
         {title: "Barrow Gang", type: "local", src: "audio/05 Track 5.mp3"},
         {title: "Legendary", type: "local", src: "audio/06 Track 6.mp3"},
         {title: "Step to da plate (ft. Swanny Rivers)", type: "local", src: "audio/07 Track 7.mp3"},
         {title: "Aha", type: "local", src: "audio/08 Track 8.mp3"},
-        {title: "09 Track 9", type: "local", src: "audio/09 Track 9.mp3"},
+        {title: "Rollercoaster (ft. Swanny Riverz & Serious)", type: "local", src: "audio/09 Track 9.mp3"},
         {title: "B.o.n.n.i.e. & C.l.y.d.e", type: "local", src: "audio/10 Track 10.mp3"},
         {title: "Hu$tleman Remix (ft. Sauce & Homi)", type: "local", src: "audio/11 Track 11.mp3"},
-        {title: "12 Track 12", type: "local", src: "audio/12 Track 12.mp3"},
+        {title: "One night stand", type: "local", src: "audio/12 Track 12.mp3"},
         {title: "I aint serving you (ft. Raf & Noodles)", type: "local", src: "audio/13 Track 13.mp3"},
         {title: "Gunna Boyz (ft. Raf & Noodles)", type: "local", src: "audio/14 Track 14.mp3"},
         {title: "Renagade", type: "local", src: "audio/15 Track 15.mp3"},
@@ -982,6 +1066,7 @@
   const epTotalDur = document.getElementById('epTotalDur');
   const epTitle = document.getElementById('epTitle');
   const epKind = document.getElementById('epKind');
+  const epCoverFallback = document.getElementById('epCoverFallback');
   const epAlsoLink = document.getElementById('epAlsoLink');
   const albumGrid = document.getElementById('albumGrid');
   const albumsPage = document.getElementById('albumsPage');
@@ -1033,6 +1118,10 @@
 
     epKind.textContent = album.kind;
     epTitle.textContent = album.title;
+    epCoverFallback.innerHTML = `
+      <div class="cover-fallback">${album.kind}</div>
+      <img src="${album.cover}" alt="${album.title} cover art" onerror="this.remove()">
+    `;
     if(epAlsoLink){
       epAlsoLink.href = album.link || '#';
       epAlsoLink.textContent = 'Also on SoundCloud';
@@ -1331,6 +1420,57 @@
     });
   },{ threshold:.5 });
   sections.forEach(s=> s && navIo.observe(s));
+
+  // ---- Music Video Carousel ----
+  // The video slides themselves are plain hand-editable HTML (see the
+  // ".video-frame" blocks inside #videoTrack above) — this script only
+  // handles moving between whichever slides are already in the markup.
+  (function(){
+    const videoTrack = document.getElementById('videoTrack');
+    const vidDots = document.getElementById('vidDots');
+    const vidPrev = document.getElementById('vidPrev');
+    const vidNext = document.getElementById('vidNext');
+    const videoCarousel = document.querySelector('.video-carousel');
+    if(!videoTrack) return;
+
+    const slides = Array.from(videoTrack.children);
+    let currentVideoIndex = 0;
+    let videoAutoTimer = null;
+
+    vidDots.innerHTML = slides.map((_,i)=>`<span data-index="${i}"></span>`).join('');
+    const dots = Array.from(vidDots.children);
+    dots.forEach(dot=>{
+      dot.addEventListener('click', ()=>{ showVideo(parseInt(dot.dataset.index, 10)); startVideoAuto(); });
+    });
+
+    function showVideo(i, skipAnim){
+      currentVideoIndex = (i + slides.length) % slides.length;
+      videoTrack.style.transition = skipAnim ? 'none' : '';
+      videoTrack.style.transform = `translateX(-${currentVideoIndex * 100}%)`;
+      dots.forEach((dot, idx)=> dot.classList.toggle('active', idx === currentVideoIndex));
+    }
+
+    function startVideoAuto(){
+      clearInterval(videoAutoTimer);
+      if(slides.length > 1) videoAutoTimer = setInterval(()=> showVideo(currentVideoIndex + 1), 7000);
+    }
+
+    if(slides.length > 1){
+      vidPrev.addEventListener('click', ()=>{ showVideo(currentVideoIndex - 1); startVideoAuto(); });
+      vidNext.addEventListener('click', ()=>{ showVideo(currentVideoIndex + 1); startVideoAuto(); });
+      if(videoCarousel){
+        videoCarousel.addEventListener('mouseenter', ()=> clearInterval(videoAutoTimer));
+        videoCarousel.addEventListener('mouseleave', startVideoAuto);
+      }
+      startVideoAuto();
+    } else {
+      vidPrev.style.display = 'none';
+      vidNext.style.display = 'none';
+      vidDots.style.display = 'none';
+    }
+
+    showVideo(0, true);
+  })();
 </script>
 
 </body>
