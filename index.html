@@ -77,9 +77,22 @@
     font-family:'Arial Black',Arial,sans-serif; font-size:.56rem; color:#fff; text-transform:uppercase;
     letter-spacing:.05em; padding:4px; line-height:1.3;
   }
+  .hero-image-spot{
+    position:absolute; top:22px; left:22px; z-index:5;
+    width:110px; aspect-ratio:3/2; border-radius:4px; overflow:hidden;
+    /* background:#00000069; border:2px solid #fff; box-shadow:0 10px 26px -10px rgba(0,0,0,.7); */
+  }
+  .hero-image-spot img{ position:absolute; inset:0; width:100%; height:100%; object-fit:contain; display:block; }
+  .hero-image-spot .cover-fallback{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center; text-align:center;
+    font-family:'Arial Black',Arial,sans-serif; font-size:.56rem; color:#fff; text-transform:uppercase;
+    letter-spacing:.05em; padding:4px; line-height:1.3;
+  }
   @media (max-width:700px){
     .advisory-spot{ top:14px; right:14px; width:80px; }
     .advisory-spot .cover-fallback{ font-size:.44rem; }
+    .hero-image-spot{ top:14px; left:14px; width:80px; }
+    .hero-image-spot .cover-fallback{ font-size:.44rem; }
   }
   #hero{
     background:
@@ -276,7 +289,7 @@
   }
   .member-card:hover{ transform:translateY(-6px); border-color:rgba(255,122,26,.45); }
   .member-photo{ position:relative; aspect-ratio:1/1; background:var(--grad); overflow:hidden; }
-  .member-photo img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; }
+  .member-photo img{ position:absolute; inset:0; width:100%; height:100%; object-fit:contain; display:block; }
   .member-photo .cover-fallback{
     position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
     font-family:'Arial Black',Arial,sans-serif; font-size:1.6rem; color:rgba(10,10,11,.55);
@@ -309,11 +322,12 @@
     display:grid; grid-template-columns:repeat(auto-fill, minmax(170px,1fr)); gap:16px;
   }
   .gallery-item{
-    position:relative; aspect-ratio:1/1; border-radius:14px; overflow:hidden; background:var(--bg-2);
+    position:relative; min-height:170px; border-radius:14px; overflow:hidden; background:var(--bg-2);
     border:1px solid rgba(255,255,255,.07); transition:transform .3s ease, border-color .3s ease;
+    display:flex; align-items:center; justify-content:center;
   }
   .gallery-item:hover{ transform:translateY(-4px); border-color:rgba(255,122,26,.4); }
-  .gallery-item img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; }
+  .gallery-item img{ display:block; width:100%; height:100%; max-height:480px; object-fit:contain; }
   .gallery-item .cover-fallback{
     position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
     font-size:.7rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted);
@@ -501,6 +515,41 @@
   .card p{ color:var(--muted); font-size:.92rem; line-height:1.6; margin:0 0 20px; }
   .status-pill{ display:inline-block; font-size:.72rem; padding:6px 14px; border-radius:100px; border:1px solid rgba(255,255,255,.2); color:var(--muted); letter-spacing:.05em; text-transform:uppercase; }
 
+  /* ---------- SNIPPETS ---------- */
+  #snippets{ background:var(--bg); }
+  .snippets-sub{ color:var(--muted); font-size:.95rem; margin:-10px 0 34px; max-width:560px; }
+  .snippet-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:26px; }
+  @media (max-width:900px){ .snippet-grid{ grid-template-columns:1fr; } }
+  .snippet-card{
+    background:var(--bg-2); border:1px solid rgba(255,255,255,.07); border-radius:18px; overflow:hidden;
+    transition:transform .3s ease, border-color .3s ease;
+  }
+  .snippet-card:hover{ transform:translateY(-6px); border-color:rgba(255,122,26,.45); }
+  .snippet-cover{ position:relative; aspect-ratio:1/1; background:var(--grad); overflow:hidden; }
+  .snippet-cover img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; }
+  .snippet-cover .cover-fallback{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center; z-index:0;
+    font-family:'Arial Black',Arial,sans-serif; font-size:1.6rem; color:rgba(10,10,11,.55);
+    text-transform:uppercase; letter-spacing:.04em;
+  }
+  .snippet-play{
+    position:absolute; inset:0; margin:auto; width:60px; height:60px; border-radius:50%; border:none; cursor:pointer;
+    background:rgba(10,10,11,.55); display:flex; align-items:center; justify-content:center; z-index:2;
+    transition:background .25s ease, transform .25s ease;
+  }
+  .snippet-card:hover .snippet-play{ background:rgba(224,38,60,.85); transform:scale(1.08); }
+  .snippet-play .tri3{ border-left:18px solid #fff; border-top:12px solid transparent; border-bottom:12px solid transparent; margin-left:4px; }
+  .snippet-play .bars3{ display:none; align-items:flex-end; gap:4px; height:22px; }
+  .snippet-play.is-playing .tri3{ display:none; }
+  .snippet-play.is-playing .bars3{ display:flex; }
+  .snippet-play .bars3 span{ width:5px; background:#fff; border-radius:2px; animation:barbounce 1s ease-in-out infinite; }
+  .snippet-play .bars3 span:nth-child(2){ animation-delay:.2s; }
+  .snippet-play .bars3 span:nth-child(3){ animation-delay:.4s; }
+  .snippet-info{ padding:18px 20px 22px; }
+  .snippet-title{ font-weight:800; font-size:1rem; margin-bottom:12px; }
+  .snippet-bar{ height:4px; border-radius:100px; background:rgba(255,255,255,.1); overflow:hidden; }
+  .snippet-fill{ display:block; height:100%; width:0%; background:var(--grad); transition:width .1s linear; }
+
   /* ---------- SUPPORT ---------- */
   #support{
     background:radial-gradient(ellipse at 50% 30%, rgba(224,38,60,.18), transparent 60%), var(--bg);
@@ -525,9 +574,18 @@
     padding:80px 8vw 40px;
     position:relative;
   }
-  .foot-top{ display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:40px; margin-bottom:60px; }
+  .foot-top{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:40px; margin-bottom:60px; }
   .foot-brand h2{ font-size:2.2rem; color:#fff; }
   .foot-brand p{ color:rgba(255,255,255,.85); margin-top:10px; max-width:320px; line-height:1.6; }
+  .foot-image-spot{
+    position:relative; width:100px; height:100px; border-radius:12px; overflow:hidden; flex-shrink:0;
+    /* background:rgba(0,0,0,.25); border:1.5px solid rgba(255,255,255,.4); */
+  }
+  .foot-image-spot img{ position:absolute; inset:0; width:100%; height:100%; object-fit:contain; display:block; }
+  .foot-image-spot .cover-fallback{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center; text-align:center;
+    font-size:.68rem; letter-spacing:.08em; text-transform:uppercase; color:rgba(255,255,255,.85); padding:6px; line-height:1.3;
+  }
   .social-row{ display:flex; gap:14px; flex-wrap:wrap; }
   .social-btn{
     width:52px; height:52px; border-radius:50%; background:rgba(0,0,0,.25); border:1.5px solid rgba(255,255,255,.4);
@@ -550,6 +608,7 @@
   <a href="#soundcloud" data-label="SoundCloud"></a>
   <a href="#facebook" data-label="Facebook"></a>
   <a href="#upcoming" data-label="Upcoming"></a>
+  <a href="#snippets" data-label="Snippets"></a>
   <a href="#support" data-label="Support"></a>
 </nav>
 
@@ -564,6 +623,14 @@
   <div class="advisory-spot">
     <div class="cover-fallback">Parental Advisory Image Here</div>
     <img src="gallery/Parental_Advisory_label.svg.png" alt="Parental Advisory" onerror="this.remove()">
+  </div>
+  <!--
+    IMAGE SPOT — top left corner of the hero, same size as the Parental
+    Advisory spot. Change the src="..." below to point at your image file.
+  -->
+  <div class="hero-image-spot">
+    <!-- <div class="cover-fallback">Image Here</div> -->
+    <img src="gallery/thcgraffiti.png" alt="" onerror="this.remove()">
   </div>
   <div class="reveal in">
     <div class="kicker">Recording Artist &middot; Producer</div>
@@ -622,28 +689,28 @@
     -->
     <div class="gallery-grid" id="galleryGrid">
       <div class="gallery-item">
-        <div class="cover-fallback">Photo</div>
+        <!-- <div class="cover-fallback">Photo</div> -->
         <img src="gallery/9444.jpg" alt="Gallery photo 1" onerror="this.remove()">
       </div>
       <div class="gallery-item">
-        <div class="cover-fallback">Photo</div>
+        <!-- <div class="cover-fallback">Photo</div> -->
         <img src="gallery/9443.jpg" alt="Gallery photo 2" onerror="this.remove()">
       </div>
       <div class="gallery-item">
-        <div class="cover-fallback">Photo</div>
+        <!-- <div class="cover-fallback">Photo</div> -->
         <img src="gallery/9445.jpg" alt="Gallery photo 3" onerror="this.remove()">
+      </div>
+      <div class="gallery-item">
+        <!-- <div class="cover-fallback">Photo</div> -->
+        <img src="gallery/9554.jpg" alt="Gallery photo 4" onerror="this.remove()">
+      </div>
+      <div class="gallery-item">
+        <!-- <div class="cover-fallback">Photo</div> -->
+        <img src="gallery/9557.jpg" alt="Gallery photo 5" onerror="this.remove()">
       </div>
       <!-- <div class="gallery-item">
         <div class="cover-fallback">Photo</div>
-        <img src="gallery/photo-4.jpg" alt="Gallery photo 4" onerror="this.remove()">
-      </div>
-      <div class="gallery-item">
-        <div class="cover-fallback">Photo</div>
-        <img src="gallery/photo-5.jpg" alt="Gallery photo 5" onerror="this.remove()">
-      </div>
-      <div class="gallery-item">
-        <div class="cover-fallback">Photo</div>
-        <img src="gallery/photo-6.jpg" alt="Gallery photo 6" onerror="this.remove()">
+        <img src="gallery/955.jpg" alt="Gallery photo 6" onerror="this.remove()">
       </div> -->
     </div>
   </div>
@@ -819,7 +886,7 @@
     <div class="card reveal">
       <div class="card-cover">
         <div class="cover-fallback">SGL</div>
-        <img class="slide" src="covers/hit-the-ground-1.jpg" alt="Hit the Ground cover art 1" onerror="this.remove()">
+        <img class="slide" src="gallery/hittheground.jpg" alt="Hit the Ground cover art 1" onerror="this.remove()">
         <img class="slide" src="covers/hit-the-ground-2.jpg" alt="Hit the Ground cover art 2" onerror="this.remove()">
         <img class="slide" src="covers/mama-1.jpg" alt="Mama cover art" onerror="this.remove()">
       </div>
@@ -833,7 +900,7 @@
     <div class="card reveal">
       <div class="card-cover">
         <div class="cover-fallback">CLB</div>
-        <img class="slide" src="covers/collab-1.jpg" alt="Collaboration cover art 1" onerror="this.remove()">
+        <img class="slide" src="gallery/9444.jpg" alt="Collaboration cover art 1" onerror="this.remove()">
         <img class="slide" src="covers/collab-2.jpg" alt="Collaboration cover art 2" onerror="this.remove()">
         <img class="slide" src="covers/collab-3.jpg" alt="Collaboration cover art 3" onerror="this.remove()">
       </div>
@@ -845,9 +912,82 @@
   </div>
 </section>
 
+<!-- SNIPPETS -->
+<section id="snippets">
+  <div class="section-label"><span class="n">06</span> Sneak Peek</div>
+  <h2 class="section-title reveal">Snippets</h2>
+  <p class="snippets-sub reveal">Short previews of what's coming — press play to hear a clip.</p>
+  <!--
+    SNIPPETS — add, remove, or reorder preview clips by editing these
+    ".snippet-card" blocks directly. Each one is a self-contained slot:
+      1. Change the <img src="..."> to that song's cover art.
+      2. Change the <source src="..."> inside <audio> to that song's
+         snippet audio file (an MP3 works well — keep clips short, 15-30s).
+      3. Update the snippet title text and the alt text to match.
+    A slot with no working image just shows a placeholder tile instead of
+    a broken image icon. To add another snippet, copy a whole
+    ".snippet-card" block (including its closing </div>) and edit the copy.
+  -->
+  <div class="snippet-grid" id="snippetGrid">
+    <div class="snippet-card reveal">
+      <div class="snippet-cover">
+        <div class="cover-fallback">EP</div>
+        <img src="gallery/squadup.jpg" alt="Squad Up snippet cover art" onerror="this.remove()">
+        <button class="snippet-play" aria-label="Play snippet">
+          <span class="tri3"></span>
+          <span class="bars3"><span></span><span></span><span></span></span>
+        </button>
+      </div>
+      <div class="snippet-info">
+        <div class="snippet-title">Squad Up</div>
+        <div class="snippet-bar"><div class="snippet-fill"></div></div>
+      </div>
+      <audio preload="none">
+        <source src="audio/squad-up-snippet.mp3" type="audio/mpeg">
+      </audio>
+    </div>
+
+    <!-- <div class="snippet-card reveal">
+      <div class="snippet-cover">
+        <div class="cover-fallback">SGL</div>
+        <img src="gallery/hittheground.jpg" alt="Hit the Ground snippet cover art" onerror="this.remove()">
+        <button class="snippet-play" aria-label="Play snippet">
+          <span class="tri3"></span>
+          <span class="bars3"><span></span><span></span><span></span></span>
+        </button>
+      </div>
+      <div class="snippet-info">
+        <div class="snippet-title">Hit the Ground</div>
+        <div class="snippet-bar"><div class="snippet-fill"></div></div>
+      </div>
+      <audio preload="none">
+        <source src="snippets/hit-the-ground-snippet.mp3" type="audio/mpeg">
+      </audio>
+    </div>
+
+    <div class="snippet-card reveal">
+      <div class="snippet-cover">
+        <div class="cover-fallback">SGL</div>
+        <img src="covers/mama-1.jpg" alt="Mama snippet cover art" onerror="this.remove()">
+        <button class="snippet-play" aria-label="Play snippet">
+          <span class="tri3"></span>
+          <span class="bars3"><span></span><span></span><span></span></span>
+        </button>
+      </div>
+      <div class="snippet-info">
+        <div class="snippet-title">Mama</div>
+        <div class="snippet-bar"><div class="snippet-fill"></div></div>
+      </div>
+      <audio preload="none">
+        <source src="snippets/mama-snippet.mp3" type="audio/mpeg">
+      </audio>
+    </div>
+  </div> -->
+</section>
+
 <!-- SUPPORT -->
 <section id="support">
-  <div class="section-label" style="justify-content:center;"><span class="n">06</span> Support The Movement</div>
+  <div class="section-label" style="justify-content:center;"><span class="n">07</span> Support The Movement</div>
   <h2 class="section-title reveal">Support Me</h2>
   <p class="support-copy reveal">Every bit of support goes straight back into new music, videos, and shows. If you rock with the sound, consider showing love below.</p>
   <div class="support-options">
@@ -879,6 +1019,14 @@
     <div class="foot-brand">
       <h2>ALEX ELLERBE</h2>
       <p>A.C.E. Follow for new music, videos, and everything happening next.</p>
+    </div>
+    <!--
+      IMAGE SPOT — sits between the brand text and the social icons.
+      Change the src="..." below to point at your image file.
+    -->
+    <div class="foot-image-spot">
+      <!-- <div class="cover-fallback">Image Here</div> -->
+      <img src="gallery/ilovethc.png" alt="" onerror="this.remove()">
     </div>
     <div class="social-row">
       <a class="social-btn" href="https://www.instagram.com/th0r0_heart_camp?stkn=eHJjbjl0bzcwdW43" aria-label="Instagram" target="_blank" rel="noopener">
@@ -986,6 +1134,7 @@
         {title: "TROUBLE!!!", type: "local", src: "audio/TROUBLE!!!.mp3" },
         {title: "Underdog pt.2", type: "local", src: "audio/Underdog-pt2.mp3" },
         {title: "We Are... THC", type: "local", src: "audio/We-Are---THC.mp3" },
+        {title: "Forever Remix", type: "local", src: "audio/Forever-Remix.mp3" }
       ],
     },
     
@@ -1022,7 +1171,7 @@
      Edit the `bio` text directly — plain sentences, no markup needed.
      ========================================================= */
   const MEMBERS = [
-    { name: "A.C.E.",   role: "Vocals", photo: "members/ace.jpg",   bio: "A.C.E. biography goes here." },
+    { name: "A.C.E.",   role: "Vocals", photo: "gallery/9554.jpg",   bio: "A.C.E. biography goes here." },
     { name: "Iceman",   role: "Vocals", photo: "members/iceman.jpg", bio: "Iceman biography goes here." },
     { name: "Rell",     role: "Vocals", photo: "members/rell.jpg",   bio: "Rell biography goes here." },
     { name: "Nawtee",   role: "Vocals", photo: "members/nawtee.jpg", bio: "Nawtee biography goes here.", tribute: "R.I.P. Nawtee" },
@@ -1393,7 +1542,7 @@
   revealEls.forEach(el=>io.observe(el));
 
   // nav dots active state
-  const sections = ['hero','video','soundcloud','facebook','upcoming','support'].map(id=>document.getElementById(id));
+  const sections = ['hero','video','soundcloud','facebook','upcoming','snippets','support'].map(id=>document.getElementById(id));
   const dots = document.querySelectorAll('.navdots a');
   const navIo = new IntersectionObserver((entries)=>{
     entries.forEach(entry=>{
@@ -1455,6 +1604,57 @@
     }
 
     showVideo(0, true);
+  })();
+
+  // ---- Snippets mini-player ----
+  // Each ".snippet-card" above has its own <audio> element — this just
+  // wires up the play button and progress bar, and makes sure only one
+  // snippet plays at a time.
+  (function(){
+    const cards = document.querySelectorAll('.snippet-card');
+    if(!cards.length) return;
+    let activeAudio = null;
+
+    function stopCard(card){
+      const a = card.querySelector('audio');
+      const b = card.querySelector('.snippet-play');
+      const f = card.querySelector('.snippet-fill');
+      if(a){ a.pause(); a.currentTime = 0; }
+      if(b) b.classList.remove('is-playing');
+      if(f) f.style.width = '0%';
+    }
+
+    cards.forEach(card=>{
+      const audio = card.querySelector('audio');
+      const btn = card.querySelector('.snippet-play');
+      const fill = card.querySelector('.snippet-fill');
+      if(!audio || !btn) return;
+
+      btn.addEventListener('click', ()=>{
+        if(audio.paused){
+          if(activeAudio && activeAudio !== audio){
+            const prevCard = activeAudio.closest('.snippet-card');
+            if(prevCard) stopCard(prevCard);
+          }
+          audio.play().catch(()=>{});
+          activeAudio = audio;
+          btn.classList.add('is-playing');
+        } else {
+          audio.pause();
+          btn.classList.remove('is-playing');
+        }
+      });
+
+      audio.addEventListener('timeupdate', ()=>{
+        if(audio.duration && fill){
+          fill.style.width = `${(audio.currentTime / audio.duration) * 100}%`;
+        }
+      });
+      audio.addEventListener('ended', ()=>{
+        btn.classList.remove('is-playing');
+        if(fill) fill.style.width = '0%';
+      });
+    });
   })();
 </script>
 
