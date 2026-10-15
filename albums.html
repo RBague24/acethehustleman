@@ -1,0 +1,596 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Albums & EPs — Alex Ellerbe</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+  /* ---------- EP PLAYER PAGE ---------- */
+  .ep-page{
+    position:fixed; inset:0; z-index:1000; background:var(--bg);
+    overflow-y:auto; -webkit-overflow-scrolling:touch;
+    opacity:0; visibility:hidden; pointer-events:none;
+    transition:opacity .35s ease, visibility 0s linear .35s;
+  }
+  /* NOTE: no `transform` on this element — a transformed ancestor becomes the
+     positioning anchor for any position:fixed descendant (like .now-bar),
+     which breaks the player bar's pinning on mobile browsers. Fade only. */
+  .ep-page.open{ opacity:1; visibility:visible; pointer-events:auto; transition:opacity .35s ease; }
+  .ep-hero{
+    display:flex; align-items:flex-end; gap:28px; padding:56px 6vw 40px;
+    background:
+      radial-gradient(ellipse at 15% 0%, rgba(224,38,60,.3), transparent 60%),
+      radial-gradient(ellipse at 85% 30%, rgba(255,122,26,.25), transparent 60%),
+      var(--bg-2);
+    flex-wrap:wrap;
+  }
+  .ep-cover{
+    position:relative; width:180px; height:180px; border-radius:16px; flex-shrink:0; background:var(--grad);
+    box-shadow:0 20px 50px -12px rgba(255,90,20,.5); overflow:hidden;
+  }
+  .ep-cover img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; }
+  .ep-cover .cover-fallback{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-family:'Arial Black',Arial,sans-serif; font-size:2.4rem; color:#0a0a0b; text-transform:uppercase;
+  }
+  .ep-meta .ep-kind{ font-size:.78rem; letter-spacing:.25em; text-transform:uppercase; color:var(--orange); margin-bottom:10px; }
+  .ep-meta h2{ font-size:clamp(1.8rem,4vw,3rem); margin-bottom:10px; }
+  .ep-meta .ep-artist{ color:var(--muted); font-size:1rem; }
+  .ep-meta .ep-stats{ display:flex; gap:22px; margin-top:18px; color:var(--muted); font-size:.85rem; flex-wrap:wrap; }
+  .ep-meta .ep-stats b{ color:var(--ink); }
+
+  .ep-list{ padding:16px 6vw 140px; }
+  .track-row{
+    display:flex; align-items:center; gap:18px; padding:16px 14px; border-radius:12px;
+    border-bottom:1px solid rgba(255,255,255,.06); cursor:pointer; transition:background .2s ease;
+  }
+  .track-row:hover{ background:rgba(255,255,255,.04); }
+  .track-row.playing{ background:rgba(255,122,26,.08); }
+  .track-num{ width:26px; text-align:center; color:var(--muted); font-size:.9rem; flex-shrink:0; }
+  .track-row.playing .track-num{ color:var(--orange); }
+  .track-playbtn{
+    width:42px; height:42px; border-radius:50%; background:rgba(255,255,255,.08); border:none; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center; transition:background .2s ease;
+  }
+  .track-row:hover .track-playbtn, .track-row.playing .track-playbtn{ background:var(--grad); }
+  .track-playbtn .tri3{ border-left:11px solid var(--ink); border-top:7px solid transparent; border-bottom:7px solid transparent; margin-left:2px; }
+  .track-row:hover .track-playbtn .tri3, .track-row.playing .track-playbtn .tri3{ border-left-color:#0a0a0b; }
+  .track-playbtn .bars3{ display:none; align-items:flex-end; gap:2px; height:14px; }
+  .track-playbtn.is-playing .tri3{ display:none; }
+  .track-playbtn.is-playing .bars3{ display:flex; }
+  .bars3 span{ width:3px; background:#0a0a0b; border-radius:1px; animation:barbounce 1s ease-in-out infinite; }
+  .bars3 span:nth-child(2){ animation-delay:.2s; } .bars3 span:nth-child(3){ animation-delay:.4s; }
+  .track-info{ flex:1; min-width:0; }
+  .track-info .t-title{ font-weight:700; font-size:1rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .track-info .t-sub{ color:var(--muted); font-size:.82rem; margin-top:3px; }
+  .track-wave{ display:none; align-items:flex-end; gap:2px; height:32px; width:120px; flex-shrink:0; }
+  @media (min-width:700px){ .track-wave{ display:flex; } }
+  .track-wave span{ flex:1; background:rgba(255,255,255,.18); border-radius:1px; }
+  .track-row.playing .track-wave span{ background:linear-gradient(180deg,var(--orange),var(--red)); }
+  .track-dur{ color:var(--muted); font-size:.85rem; width:48px; text-align:right; flex-shrink:0; }
+  .track-dur.platform-badge{ width:auto; color:var(--orange); font-weight:700; font-size:.72rem; letter-spacing:.06em; text-transform:uppercase; }
+
+  .track-embed{ max-height:0; overflow:hidden; transition:max-height .35s ease; }
+  .track-embed.open{ max-height:200px; margin:2px 0 16px; }
+  .track-embed .embed-inner{ border-radius:12px; overflow:hidden; background:#000; }
+  .track-embed iframe{ width:100%; border:0; display:block; }
+
+  .ep-elsewhere{ display:flex; gap:12px; flex-wrap:wrap; padding:0 6vw 60px; }
+  .ep-elsewhere a{
+    display:inline-flex; align-items:center; gap:10px; padding:12px 20px; border-radius:100px; font-size:.82rem;
+    font-weight:700; letter-spacing:.03em; text-transform:uppercase; border:1px solid rgba(255,255,255,.15); transition:all .2s ease;
+  }
+  .ep-elsewhere a:hover{ border-color:var(--orange); background:rgba(255,122,26,.1); }
+
+  /* ---------- ALBUMS GRID PAGE ---------- */
+  .albums-intro{ padding:48px 6vw 8px; }
+  .albums-intro h2{ font-size:clamp(1.8rem,4vw,3rem); margin-bottom:10px; }
+  .albums-intro p{ color:var(--muted); max-width:520px; line-height:1.6; }
+  .album-grid{
+    display:grid; grid-template-columns:repeat(auto-fill, minmax(160px,1fr)); gap:26px;
+    padding:28px 6vw 100px;
+  }
+  .album-card{ cursor:pointer; transition:transform .25s ease; }
+  .album-card:hover{ transform:translateY(-6px); }
+  .album-cover{
+    position:relative; aspect-ratio:1/1; border-radius:16px; overflow:hidden; margin-bottom:14px;
+    background:var(--grad); box-shadow:0 18px 40px -14px rgba(255,90,20,.4); transition:box-shadow .25s ease;
+  }
+  .album-card:hover .album-cover{ box-shadow:0 24px 55px -14px rgba(255,90,20,.55); }
+  .album-cover img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; }
+  .album-cover .cover-fallback{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-family:'Arial Black',Arial,sans-serif; font-size:1.3rem; color:rgba(10,10,11,.55);
+    text-transform:uppercase; letter-spacing:.04em; text-align:center; padding:10px;
+  }
+  .album-cover .album-play{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    background:rgba(10,10,11,0); transition:background .25s ease;
+  }
+  .album-card:hover .album-play{ background:rgba(10,10,11,.35); }
+  .album-play .circle5{
+    width:52px; height:52px; border-radius:50%; background:var(--grad); display:flex; align-items:center; justify-content:center;
+    opacity:0; transform:scale(.8); transition:opacity .25s ease, transform .25s ease;
+    box-shadow:0 8px 24px -6px rgba(255,90,20,.6);
+  }
+  .album-card:hover .circle5{ opacity:1; transform:scale(1); }
+  .circle5 .tri5{ border-left:14px solid #0a0a0b; border-top:9px solid transparent; border-bottom:9px solid transparent; margin-left:3px; }
+  .album-title{ font-weight:800; font-size:.98rem; line-height:1.3; }
+  .album-kind{ color:var(--orange); font-size:.68rem; text-transform:uppercase; letter-spacing:.15em; margin-top:4px; }
+
+  .now-bar{
+    position:fixed; left:0; right:0; bottom:0; z-index:6;
+    background:rgba(14,14,15,.96); backdrop-filter:blur(10px); border-top:1px solid rgba(255,255,255,.08);
+    display:flex; align-items:center; gap:18px; padding:12px 6vw;
+    transform:translateY(100%); transition:transform .3s ease;
+  }
+  .now-bar.show{ transform:translateY(0); }
+  .now-art{ width:44px; height:44px; border-radius:8px; background:var(--grad); flex-shrink:0; }
+  .now-meta{ min-width:0; width:140px; flex-shrink:0; }
+  .now-meta .n-title{ font-size:.88rem; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .now-meta .n-artist{ font-size:.75rem; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .now-controls{ display:flex; align-items:center; gap:14px; flex-shrink:0; }
+  .now-controls button{ background:none; border:none; color:var(--ink); display:flex; align-items:center; justify-content:center; }
+  .now-controls .skip{ font-size:1.3rem; opacity:.8; }
+  .now-controls .skip:hover{ opacity:1; color:var(--orange); }
+  .now-playbtn{
+    width:38px; height:38px; border-radius:50%; background:var(--grad) !important; display:flex; align-items:center; justify-content:center;
+  }
+  .now-playbtn .tri4{ border-left:10px solid #0a0a0b; border-top:6px solid transparent; border-bottom:6px solid transparent; margin-left:2px; }
+  .now-playbtn .pause4{ display:none; gap:3px; }
+  .now-playbtn .pause4 span{ width:3px; height:12px; background:#0a0a0b; border-radius:1px; }
+  .now-playbtn.is-playing .tri4{ display:none; }
+  .now-playbtn.is-playing .pause4{ display:flex; }
+  .now-seek{ flex:1; display:flex; align-items:center; gap:10px; min-width:0; }
+  .now-time{ font-size:.75rem; color:var(--muted); width:36px; flex-shrink:0; }
+  .now-range{
+    flex:1; height:4px; -webkit-appearance:none; appearance:none; background:rgba(255,255,255,.15); border-radius:2px; outline:none;
+  }
+  .now-range::-webkit-slider-thumb{ -webkit-appearance:none; width:13px; height:13px; border-radius:50%; background:var(--orange); cursor:pointer; }
+  .now-range::-moz-range-thumb{ width:13px; height:13px; border-radius:50%; background:var(--orange); border:none; cursor:pointer; }
+  @media (max-width:640px){ .now-meta{ display:none; } }
+</style>
+</head>
+<body>
+
+<div class="grain"></div>
+
+<!-- ALBUMS — GRID OF ALL RELEASES -->
+<main id="albumsPage">
+  <div class="ep-topbar">
+    <a class="ep-back" href="index.html">&larr; Home</a>
+    <div style="color:var(--muted); font-size:.8rem; letter-spacing:.15em; text-transform:uppercase;">Discography</div>
+  </div>
+
+  <div class="albums-intro">
+    <h2>Albums &amp; EPs</h2>
+    <p>Pick a release to open its tracklist and start streaming.</p>
+  </div>
+
+  <div class="album-grid" id="albumGrid"><!-- album cards injected by script --></div>
+</main>
+
+<!-- LISTEN TO EP — CUSTOM PLAYER PAGE (scoped to whichever album was opened) -->
+<div class="ep-page" id="epPage">
+  <div class="ep-topbar">
+    <button class="ep-back" id="epClose">&larr; Albums</button>
+    <div style="color:var(--muted); font-size:.8rem; letter-spacing:.15em; text-transform:uppercase;">Now Streaming</div>
+  </div>
+
+  <div class="ep-hero">
+    <div class="ep-cover" id="epCoverFallback"></div>
+    <div class="ep-meta">
+      <div class="ep-kind" id="epKind">EP</div>
+      <h2 id="epTitle">—</h2>
+      <div class="ep-artist">Alex Ellerbe</div>
+      <div class="ep-stats"><span><b id="epTrackCount">0</b> tracks</span><span id="epTotalDur">--:-- total</span></div>
+    </div>
+  </div>
+
+  <div class="ep-list" id="epList"><!-- track rows injected by script --></div>
+
+  <div class="ep-elsewhere">
+    <a href="https://on.soundcloud.com/LD1K7P9gMBk1OasAsx" target="_blank" rel="noopener" style="color:var(--sc-orange);" id="epAlsoLink">Also on SoundCloud</a>
+
+  </div>
+
+  <div class="now-bar" id="nowBar">
+    <div class="now-art"></div>
+    <div class="now-meta">
+      <div class="n-title" id="nowTitle">—</div>
+      <div class="n-artist">Alex Ellerbe</div>
+    </div>
+    <div class="now-controls">
+      <button class="skip" id="prevBtn" aria-label="Previous track">⏮</button>
+      <button class="now-playbtn" id="nowPlayBtn" aria-label="Play or pause">
+        <span class="tri4"></span>
+        <span class="pause4"><span></span><span></span></span>
+      </button>
+      <button class="skip" id="nextBtn" aria-label="Next track">⏭</button>
+    </div>
+    <div class="now-seek">
+      <span class="now-time" id="curTime">0:00</span>
+      <input type="range" class="now-range" id="seekRange" min="0" max="100" value="0">
+      <span class="now-time" id="durTime">0:00</span>
+    </div>
+  </div>
+</div>
+
+<script>
+  /* =========================================================
+     TRACKLIST — edit this array to control what plays and how.
+
+     Two kinds of entries:
+
+     1) type: "local"  — plays through our own custom player using
+        a file you host yourself (audio/track.mp3). Good for previews
+        of unreleased material. IMPORTANT: plays here do NOT count
+        toward SoundCloud/Spotify play counts or PRO/royalty reporting
+        — there's nothing tracking a play on your own webserver.
+
+     2) type: "soundcloud" or "spotify" — plays through that
+        platform's REAL embedded player (their actual widget, loaded
+        right on the site). Because the play genuinely happens on
+        SoundCloud/Spotify's own system, it counts the same as any
+        other play on that platform. Use this for anything that's
+        actually been released/distributed. Just paste the real
+        track URL:
+          soundcloud: the on.soundcloud.com/... or soundcloud.com/... link
+          spotify:    the open.spotify.com/track/... link
+
+     Only "local" tracks use the audio/ folder — embed tracks need no file at all.
+     ========================================================= */
+  /* =========================================================
+     ALBUMS — one entry per release. Each has its own cover art
+     and its own tracklist (using the same track "type" rules as
+     before: local / soundcloud / spotify — see notes above).
+
+     To add another release later (like Bonnie & Clyde Vol.2 once
+     it drops), just copy one of these objects, give it a unique
+     id, its own cover image, and its own tracks array.
+     ========================================================= */
+  const ALBUMS = [
+    {
+      id: "Bonnie & Clyde Vol.1",
+      title: "Bonnie & Clyde Vol.1",
+      kind: "Album",
+      cover: "covers/bonnie-clyde-vol1.jpg",
+      link: "https://on.soundcloud.com/LD1K7P9gMBk1OasAsx",
+      tracks: [
+        { title: "Hu$tleman", type: "local", src: "audio/01 Track 1.mp3" },
+        { title: "Run this town (ft. Homi)", type: "local", src: "audio/02 Track 2.mp3" },
+        {title: "Do you have the time? (Prod. by Sap)", type: "local", src: "audio/03 Track 3.mp3"},
+        {title: "One for the Money (Prod. by Sap)", type: "local", src: "audio/04 Track 4.mp3"},
+        {title: "Barrow Gang", type: "local", src: "audio/05 Track 5.mp3"},
+        {title: "Legendary", type: "local", src: "audio/06 Track 6.mp3"},
+        {title: "Step to da plate (ft. Swanny Rivers)", type: "local", src: "audio/07 Track 7.mp3"},
+        {title: "Aha", type: "local", src: "audio/08 Track 8.mp3"},
+        {title: "B.o.n.n.i.e. & C.l.y.d.e", type: "local", src: "audio/10 Track 10.mp3"},
+        {title: "Hu$tleman Remix (ft. Sauce & Homi)", type: "local", src: "audio/11 Track 11.mp3"},
+        {title: "One night stand", type: "local", src: "audio/12 Track 12.mp3"},
+        {title: "I aint serving you (ft. Raf & Noodles)", type: "local", src: "audio/13 Track 13.mp3"},
+        {title: "Gunna Boyz (ft. Raf & Noodles)", type: "local", src: "audio/14 Track 14.mp3"},
+        {title: "Renagade", type: "local", src: "audio/15 Track 15.mp3"},
+      ],
+      
+
+    },
+    // Example for later:
+    {
+      id: "THC The Compilation",
+      title: "THC The Compilation",
+      kind: "Mixtape",
+      cover: "gallery/9445.jpg",
+      // link: "https://on.soundcloud.com/xxxxxxxx",
+      tracks: [ /* ... */ 
+        {title: "1000 ways to kill", type: "local", src: "audio/1000-ways-to-kill-Capital-Punishment-Pt.-2.mp3" },
+        {title: "Can I Stay Here", type: "local", src: "audio/Can-I-Stay-Here.mp3" },
+        {title: "Crown Me King", type: "local", src: "audio/Crown-Me-King.mp3" },
+        
+        {title: "Hustleman Remix (pt.2)", type: "local", src: "audio/Hustleman-Remix-Pt2.mp3" },
+        {title: "Just Be Me", type: "local", src: "audio/Just-Be-Me-Remix.mp3" },
+        {title: "Just Like You (ft. Richy)", type: "local", src: "audio/Just-Like-You-Ft-Richy.mp3" },
+        {title: "MF Finished", type: "local", src: "audio/thc mf finished.mp3" },
+        {title: "My Clique Freestyle", type: "local", src: "audio/09 Track 9.mp3"},
+
+        {title: "Rock & Roll (This is How We Rock)", type: "local", src: "audio/Rock&Roll-This-is-How-We-Rock.mp3" },
+        {title: "The A Team", type: "local", src: "audio/The-A-Team.mp3" },
+        {title: "TROUBLE!!!", type: "local", src: "audio/TROUBLE!!!.mp3" },
+        {title: "Underdog pt.2", type: "local", src: "audio/Underdog-pt2.mp3" },
+        {title: "We Are... THC", type: "local", src: "audio/We-Are---THC.mp3" },
+        {title: "How we roll", type: "local", src: "audio/forever-remix.mp3" }
+      ],
+    },
+    
+    {
+      id: "soundcloud",
+      title: "SoundCloud Releases",
+      kind: "SoundCloud",
+      cover: "gallery/9560.jpg",
+      link: "https://on.soundcloud.com/LD1K7P9gMBk1OasAsx",
+      tracks: [
+        { title: "Barrow Gang", type: "soundcloud", url: "https://soundcloud.com/alex-ellerbe-64402251/barrow-gang?si=ad38e2ac272849de90065733c9166a83&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing" },
+        { title: "Step to da plate (ft. Swanny Rivers)", type: "soundcloud",  url: "https://soundcloud.com/alex-ellerbe-64402251/step-to-da-plate-ft-swanny?si=c205ab11b2964cc0878377b48113d775&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing" },
+        { title: "Aha",   type: "soundcloud", url: "https://soundcloud.com/alex-ellerbe-64402251/aha?si=e6f72d0a52474a239299aa58c556f9f3&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing"},
+        { title: "Rollercoaster (ft. Swanny Rivers & Serious", type: "soundcloud", url: "https://soundcloud.com/alex-ellerbe-64402251/rollercoaster-ft-swanny-rivers?si=149f5643ba684e91a1c3ac36410a57ba&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing" },
+        {title: "Legendary", type:"soundcloud", url:"https://soundcloud.com/alex-ellerbe-64402251/legendary?si=75a640b7901242c087490a7d1be247e4&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing"},
+        {title: "B.o.n.n.i.e. & C.l.y.d.e.", type:"soundcloud", url:"https://soundcloud.com/alex-ellerbe-64402251/b-o-n-n-i-e-c-l-y-d-e?si=f97260d6c7504f0493b7d85cfa512e5e&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing"},
+        {title: "Hu$leman Remix (ft. Sauce & Homi)", type:"soundcloud", url:"https://soundcloud.com/alex-ellerbe-64402251/hu-tleman-remix-ft-sauce-and?si=7fff6dce9094472aac9b2746b3bcf37d&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing"},
+        {title: "Lady", type: "soundcloud", url:"https://soundcloud.com/alex-ellerbe-64402251/lady?si=920b1c513ffe442d98057c3cff0f96cf&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing"},
+        {title: "I aint serving you (ft. Raf & Noodles)", type:"soundcloud", url:"https://soundcloud.com/alex-ellerbe-64402251/i-aint-serving-you-ft-raf-and?si=4410cd842a36418baf344f899b955adc&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing"},
+        {title: "Gunna Boyz", type: "soundcloud", url:"https://soundcloud.com/alex-ellerbe-64402251/gunna-boyz-ft-raf-and-noodles?si=335869ba10d1476c89d5b916efe26391&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing"}
+      ],
+      
+
+    },
+  ];
+
+  let CURRENT_TRACKS = [];
+  let currentAlbumIndex = -1;
+
+
+  function soundcloudEmbedSrc(url){
+    return `https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}&color=%23ff7a1a&auto_play=true&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=false`;
+  }
+  function spotifyEmbedSrc(url){
+    const m = url.match(/track\/([a-zA-Z0-9]+)/);
+    const id = m ? m[1] : '';
+    return `https://open.spotify.com/embed/track/${id}?utm_source=generator&theme=0`;
+  }
+
+  const audio = new Audio();
+  let currentTrack = -1;
+  let isPlaying = false;
+
+  const epList = document.getElementById('epList');
+  const epTrackCount = document.getElementById('epTrackCount');
+  const epTotalDur = document.getElementById('epTotalDur');
+  const epTitle = document.getElementById('epTitle');
+  const epKind = document.getElementById('epKind');
+  const epCoverFallback = document.getElementById('epCoverFallback');
+  const epAlsoLink = document.getElementById('epAlsoLink');
+  const epPage = document.getElementById('epPage');
+  const albumGrid = document.getElementById('albumGrid');
+  const nowBar = document.getElementById('nowBar');
+  const nowTitle = document.getElementById('nowTitle');
+  const nowPlayBtn = document.getElementById('nowPlayBtn');
+  const seekRange = document.getElementById('seekRange');
+  const curTimeEl = document.getElementById('curTime');
+  const durTimeEl = document.getElementById('durTime');
+
+  function formatTime(sec){
+    if(!isFinite(sec) || sec < 0) return "0:00";
+    const m = Math.floor(sec/60);
+    const s = Math.floor(sec%60).toString().padStart(2,'0');
+    return `${m}:${s}`;
+  }
+
+  function makeWaveBars(n){
+    let html = '';
+    for(let i=0;i<n;i++){ html += `<span style="height:${6 + Math.random()*26}px"></span>`; }
+    return html;
+  }
+
+  function renderAlbums(){
+    albumGrid.innerHTML = ALBUMS.map((a,i)=>`
+      <div class="album-card" data-album-index="${i}">
+        <div class="album-cover">
+          <div class="cover-fallback">${a.kind}</div>
+          <img src="${a.cover}" alt="${a.title} cover art" onerror="this.remove()">
+          <div class="album-play"><div class="circle5"><span class="tri5"></span></div></div>
+        </div>
+        <div class="album-title">${a.title}</div>
+        <div class="album-kind">${a.kind} &middot; ${a.tracks.length} tracks</div>
+      </div>
+    `).join('');
+
+    albumGrid.querySelectorAll('.album-card').forEach(card=>{
+      card.addEventListener('click', ()=> openAlbum(parseInt(card.dataset.albumIndex, 10)));
+    });
+  }
+
+  function openAlbum(i){
+    const album = ALBUMS[i];
+    if(!album) return;
+    currentAlbumIndex = i;
+    CURRENT_TRACKS = album.tracks;
+
+    epKind.textContent = album.kind;
+    epTitle.textContent = album.title;
+    epCoverFallback.innerHTML = `
+      <div class="cover-fallback">${album.kind}</div>
+      <img src="${album.cover}" alt="${album.title} cover art" onerror="this.remove()">
+    `;
+    if(epAlsoLink){
+      epAlsoLink.href = album.link || '#';
+      epAlsoLink.textContent = 'Also on SoundCloud';
+    }
+
+    // reset player state for the newly opened album
+    if(openEmbedIndex !== -1){ openEmbedIndex = -1; }
+    if(!audio.paused) audio.pause();
+    audio.removeAttribute('src');
+    currentTrack = -1;
+    isPlaying = false;
+    nowBar.classList.remove('show');
+
+    renderTracks();
+
+    epPage.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function renderTracks(){
+    epTrackCount.textContent = CURRENT_TRACKS.length;
+    epList.innerHTML = CURRENT_TRACKS.map((t,i)=>{
+      const isEmbed = t.type === 'soundcloud' || t.type === 'spotify';
+      const durCell = isEmbed
+        ? `<div class="track-dur platform-badge" data-dur-for="${i}">${t.type}</div>`
+        : `<div class="track-dur" data-dur-for="${i}">--:--</div>`;
+      const row = `
+      <div class="track-row" data-index="${i}" data-type="${t.type}">
+        <div class="track-num">${i+1}</div>
+        <button class="track-playbtn" aria-label="Play ${t.title}">
+          <span class="tri3"></span>
+          <span class="bars3"><span></span><span></span><span></span></span>
+        </button>
+        <div class="track-info">
+          <div class="t-title">${t.title}</div>
+          <div class="t-sub">Alex Ellerbe</div>
+        </div>
+        <div class="track-wave">${makeWaveBars(28)}</div>
+        ${durCell}
+      </div>`;
+      const embedShell = isEmbed ? `<div class="track-embed" id="embed-${i}"><div class="embed-inner"></div></div>` : '';
+      return row + embedShell;
+    }).join('');
+
+    epList.querySelectorAll('.track-row').forEach(row=>{
+      row.addEventListener('click', ()=>{
+        const i = parseInt(row.dataset.index, 10);
+        const t = CURRENT_TRACKS[i];
+        if(t.type === 'soundcloud' || t.type === 'spotify'){
+          toggleEmbed(i);
+        } else if(currentTrack === i){
+          togglePlay();
+        } else {
+          loadTrack(i, true);
+        }
+      });
+    });
+
+    // probe durations quietly without playing — local tracks only
+    CURRENT_TRACKS.forEach((t, i)=>{
+      if(t.type !== 'local') return;
+      const probe = new Audio();
+      probe.preload = 'metadata';
+      probe.src = t.src;
+      probe.addEventListener('loadedmetadata', ()=>{
+        const el = epList.querySelector(`[data-dur-for="${i}"]`);
+        if(el) el.textContent = formatTime(probe.duration);
+      });
+      probe.addEventListener('error', ()=>{
+        const el = epList.querySelector(`[data-dur-for="${i}"]`);
+        if(el) el.textContent = "—";
+      });
+    });
+  }
+
+  let openEmbedIndex = -1;
+  function toggleEmbed(i){
+    const t = CURRENT_TRACKS[i];
+    const shell = document.getElementById(`embed-${i}`);
+    const row = epList.querySelector(`.track-row[data-index="${i}"]`);
+    const inner = shell.querySelector('.embed-inner');
+
+    // closing the one that's already open
+    if(openEmbedIndex === i){
+      shell.classList.remove('open');
+      row.classList.remove('playing');
+      inner.innerHTML = ''; // stops playback
+      openEmbedIndex = -1;
+      return;
+    }
+    // close whichever embed was open before
+    if(openEmbedIndex !== -1){
+      const prevShell = document.getElementById(`embed-${openEmbedIndex}`);
+      const prevRow = epList.querySelector(`.track-row[data-index="${openEmbedIndex}"]`);
+      if(prevShell){ prevShell.classList.remove('open'); prevShell.querySelector('.embed-inner').innerHTML = ''; }
+      if(prevRow) prevRow.classList.remove('playing');
+    }
+    // pause our own local-file player too, so nothing double-plays
+    if(!audio.paused) audio.pause();
+
+    const iframe = document.createElement('iframe');
+    if(t.type === 'soundcloud'){
+      iframe.src = soundcloudEmbedSrc(t.url);
+      iframe.height = '166';
+      iframe.setAttribute('scrolling', 'no');
+      iframe.setAttribute('allow', 'autoplay');
+    } else {
+      iframe.src = spotifyEmbedSrc(t.url);
+      iframe.height = '152';
+      iframe.setAttribute('allow', 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture');
+      iframe.setAttribute('loading', 'lazy');
+    }
+    inner.innerHTML = '';
+    inner.appendChild(iframe);
+    shell.classList.add('open');
+    row.classList.add('playing');
+    openEmbedIndex = i;
+  }
+
+  function updateRowStates(){
+    epList.querySelectorAll('.track-row').forEach(row=>{
+      const i = parseInt(row.dataset.index, 10);
+      const btn = row.querySelector('.track-playbtn');
+      row.classList.toggle('playing', i === currentTrack);
+      btn.classList.toggle('is-playing', i === currentTrack && isPlaying);
+    });
+  }
+
+  function loadTrack(i, autoplay){
+    if(i < 0 || i >= CURRENT_TRACKS.length) return;
+    if(CURRENT_TRACKS[i].type !== 'local') return; // embeds are handled by toggleEmbed
+    if(openEmbedIndex !== -1){
+      const prevShell = document.getElementById(`embed-${openEmbedIndex}`);
+      const prevRow = epList.querySelector(`.track-row[data-index="${openEmbedIndex}"]`);
+      if(prevShell){ prevShell.classList.remove('open'); prevShell.querySelector('.embed-inner').innerHTML = ''; }
+      if(prevRow) prevRow.classList.remove('playing');
+      openEmbedIndex = -1;
+    }
+    currentTrack = i;
+    audio.src = CURRENT_TRACKS[i].src;
+    nowTitle.textContent = CURRENT_TRACKS[i].title;
+    nowBar.classList.add('show');
+    if(autoplay){
+      audio.play().catch(()=>{ /* file not added yet, or blocked until user gesture */ });
+    }
+    updateRowStates();
+  }
+
+  function togglePlay(){
+    if(currentTrack === -1){ loadTrack(0, true); return; }
+    if(audio.paused){ audio.play().catch(()=>{}); } else { audio.pause(); }
+  }
+
+  audio.addEventListener('play', ()=>{ isPlaying = true; nowPlayBtn.classList.add('is-playing'); updateRowStates(); });
+  audio.addEventListener('pause', ()=>{ isPlaying = false; nowPlayBtn.classList.remove('is-playing'); updateRowStates(); });
+  audio.addEventListener('timeupdate', ()=>{
+    curTimeEl.textContent = formatTime(audio.currentTime);
+    if(audio.duration){ seekRange.value = (audio.currentTime / audio.duration) * 100; }
+  });
+  audio.addEventListener('loadedmetadata', ()=>{ durTimeEl.textContent = formatTime(audio.duration); });
+  audio.addEventListener('ended', ()=>{ loadTrack((currentTrack + 1) % CURRENT_TRACKS.length, true); });
+
+  nowPlayBtn.addEventListener('click', togglePlay);
+  document.getElementById('prevBtn').addEventListener('click', ()=> loadTrack((currentTrack - 1 + CURRENT_TRACKS.length) % CURRENT_TRACKS.length, true));
+  document.getElementById('nextBtn').addEventListener('click', ()=> loadTrack((currentTrack + 1) % CURRENT_TRACKS.length, true));
+  seekRange.addEventListener('input', ()=>{
+    if(audio.duration){ audio.currentTime = (seekRange.value / 100) * audio.duration; }
+  });
+
+  function backToAlbumsFromPlayer(){
+    // stop whatever's playing before leaving the tracklist
+    if(!audio.paused) audio.pause();
+    if(openEmbedIndex !== -1){
+      const prevShell = document.getElementById(`embed-${openEmbedIndex}`);
+      if(prevShell){ prevShell.classList.remove('open'); prevShell.querySelector('.embed-inner').innerHTML = ''; }
+      openEmbedIndex = -1;
+    }
+    nowBar.classList.remove('show');
+    epPage.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.getElementById('epClose').addEventListener('click', backToAlbumsFromPlayer);
+  document.addEventListener('keydown', (e)=>{
+    if(e.key === 'Escape' && epPage.classList.contains('open')) backToAlbumsFromPlayer();
+  });
+
+  renderAlbums();
+</script>
+
+</body>
+</html>

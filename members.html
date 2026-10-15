@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meet The Camp — TH0R0 HEART CAMP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik+Bubbles&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  /* ---------- MEMBERS PAGE ---------- */
+  .members-intro{ padding:48px 6vw 8px; }
+  .members-intro h2{ font-size:clamp(1.8rem,4vw,3rem); margin-bottom:10px; }
+  .members-intro p{ color:var(--muted); max-width:560px; line-height:1.6; }
+
+  .member-grid{
+    display:grid; grid-template-columns:repeat(auto-fill, minmax(220px,1fr)); gap:26px;
+    padding:28px 6vw 10px;
+  }
+  .member-card{
+    background:var(--bg-2); border:1px solid rgba(255,255,255,.07); border-radius:18px; overflow:hidden;
+    transition:transform .3s ease, border-color .3s ease;
+  }
+  .member-card:hover{ transform:translateY(-6px); border-color:rgba(255,122,26,.45); }
+  .member-photo{ position:relative; aspect-ratio:1/1; background:var(--grad); overflow:hidden; }
+  .member-photo img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; }
+  .member-photo .cover-fallback{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-family:'Arial Black',Arial,sans-serif; font-size:1.6rem; color:rgba(10,10,11,.55);
+    text-transform:uppercase; letter-spacing:.04em;
+  }
+  .member-slot{ position:relative; }
+  .tribute-tag{
+    position:absolute; top:-24px; left:12px; z-index:6;
+    font-family:'Rubik Bubbles', 'Arial Black', sans-serif;
+    font-size:1.5rem; line-height:1; letter-spacing:.02em;
+    color:#fff;
+    -webkit-text-stroke: 1.5px #000;
+    text-shadow:
+      -2px 0 0 #000, 2px 0 0 #000, 0 -2px 0 #000, 0 2px 0 #000,
+      -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000,
+      0 6px 10px rgba(0,0,0,.5);
+    transform:rotate(-6deg);
+    pointer-events:none;
+    white-space:nowrap;
+  }
+  .member-info{ padding:20px 22px 24px; }
+  .member-name{ font-weight:800; font-size:1.15rem; text-transform:uppercase; letter-spacing:.02em; margin-bottom:3px; }
+  .member-role{ color:var(--orange); font-size:.7rem; text-transform:uppercase; letter-spacing:.16em; margin-bottom:12px; }
+  .member-bio{ color:var(--muted); font-size:.88rem; line-height:1.65; }
+
+  .gallery-section{ padding:36px 6vw 100px; }
+  .gallery-section h3{ font-size:clamp(1.4rem,3vw,2rem); margin-bottom:8px; }
+  .gallery-section .gallery-sub{ color:var(--muted); font-size:.92rem; margin-bottom:26px; }
+  .gallery-grid{
+    display:grid; grid-template-columns:repeat(auto-fill, minmax(170px,1fr)); gap:16px;
+  }
+  .gallery-item{
+    position:relative; min-height:170px; border-radius:14px; overflow:hidden; background:var(--bg-2);
+    border:1px solid rgba(255,255,255,.07); transition:transform .3s ease, border-color .3s ease;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .gallery-item:hover{ transform:translateY(-4px); border-color:rgba(255,122,26,.4); }
+  .gallery-item img{ display:block; width:100%; height:100%; max-height:480px; object-fit:contain; }
+  .gallery-item .cover-fallback{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-size:.7rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted);
+  }
+</style>
+</head>
+<body>
+
+<div class="grain"></div>
+
+<main id="membersPage">
+  <div class="ep-topbar">
+    <a class="ep-back" href="index.html">&larr; Home</a>
+    <div style="color:var(--muted); font-size:.8rem; letter-spacing:.15em; text-transform:uppercase;">The Camp</div>
+  </div>
+
+  <div class="members-intro">
+    <h2>Meet TH0R0 HEART CAMP</h2>
+    <p>The crew behind the sound.</p>
+  </div>
+
+  <div class="member-grid" id="memberGrid"><!-- member cards injected by script --></div>
+
+  <div class="gallery-section">
+    <h3>Gallery</h3>
+    <div class="gallery-sub">A few shots of the camp.</div>
+    <!--
+      GALLERY — add, remove, or reorder photos by editing these blocks
+      directly. Each one is a self-contained "slot":
+        1. Change the src="..." to point at your image file.
+        2. Change the alt="..." to a short description of the photo.
+      A slot with no working image just shows a "Photo" placeholder
+      tile instead of a broken image icon — safe to leave as-is
+      until you have the real picture. Copy/paste a whole block to
+      add more slots.
+    -->
+    <div class="gallery-grid" id="galleryGrid">
+      <div class="gallery-item">
+        <!-- <div class="cover-fallback">Photo</div> -->
+        <img src="gallery/9444.jpg" alt="Gallery photo 1" onerror="this.remove()">
+      </div>
+      <div class="gallery-item">
+        <!-- <div class="cover-fallback">Photo</div> -->
+        <img src="gallery/9443.jpg" alt="Gallery photo 2" onerror="this.remove()">
+      </div>
+      <div class="gallery-item">
+        <!-- <div class="cover-fallback">Photo</div> -->
+        <img src="gallery/9445.jpg" alt="Gallery photo 3" onerror="this.remove()">
+      </div>
+      <div class="gallery-item">
+        <!-- <div class="cover-fallback">Photo</div> -->
+        <img src="gallery/9554.jpg" alt="Gallery photo 4" onerror="this.remove()">
+      </div>
+      <div class="gallery-item">
+        <!-- <div class="cover-fallback">Photo</div> -->
+        <img src="gallery/9557.jpg" alt="Gallery photo 5" onerror="this.remove()">
+      </div>
+      <div class="gallery-item">
+        <!-- <div class="cover-fallback">Photo</div> -->
+        <img src="gallery/9561.jpg" alt="Gallery photo 5" onerror="this.remove()">
+      </div>
+      <div class="gallery-item">
+        <!-- <div class="cover-fallback">Photo</div> -->
+        <img src="gallery/9562.jpg" alt="Gallery photo 5" onerror="this.remove()">
+      </div>
+      <div class="gallery-item">
+        <!-- <div class="cover-fallback">Photo</div> -->
+        <img src="gallery/9563.jpg" alt="Gallery photo 5" onerror="this.remove()">
+      </div>
+      <div class="gallery-item">
+        <!-- <div class="cover-fallback">Photo</div> -->
+        <img src="gallery/9564.jpg" alt="Gallery photo 5" onerror="this.remove()">
+      </div>
+      <div class="gallery-item">
+        <!-- <div class="cover-fallback">Photo</div> -->
+        <img src="gallery/9566.jpg" alt="Gallery photo 5" onerror="this.remove()">
+      </div>
+      <div class="gallery-item">
+        <!-- <div class="cover-fallback">Photo</div> -->
+        <img src="gallery/9567.jpg" alt="Gallery photo 5" onerror="this.remove()">
+      </div>
+      <div class="gallery-item">
+        <!-- <div class="cover-fallback">Photo</div> -->
+        <img src="gallery/9568.jpg" alt="Gallery photo 5" onerror="this.remove()">
+      </div>
+      <div class="gallery-item">
+        <!-- <div class="cover-fallback">Photo</div> -->
+        <img src="gallery/9569.jpg" alt="Gallery photo 5" onerror="this.remove()">
+      </div>
+      <div class="gallery-item">
+        <!-- <div class="cover-fallback">Photo</div> -->
+        <img src="gallery/9571.jpg" alt="Gallery photo 5" onerror="this.remove()">
+      </div>
+      <div class="gallery-item">
+        <!-- <div class="cover-fallback">Photo</div> -->
+        <img src="gallery/9572.jpg" alt="Gallery photo 5" onerror="this.remove()">
+      </div>
+      <!-- <div class="gallery-item">
+        <div class="cover-fallback">Photo</div>
+        <img src="gallery/955.jpg" alt="Gallery photo 6" onerror="this.remove()">
+      </div> -->
+    </div>
+  </div>
+</main>
+
+<script>
+  /* =========================================================
+     MEMBERS — one entry per person, shown on the "Meet The Camp"
+     page. Put each photo at the path given in `photo`; if it's
+     missing, a placeholder with their initial shows instead.
+     Edit the `bio` text directly — plain sentences, no markup needed.
+     ========================================================= */
+  const MEMBERS = [
+    { name: "A.C.E.",   role: "Vocals", photo: "gallery/9554.jpg",   bio: "A.C.E. biography goes here." },
+    { name: "Iceman",   role: "Vocals", photo: "members/iceman.jpg", bio: "Iceman biography goes here." },
+    { name: "Rell",     role: "Vocals", photo: "members/rell.jpg",   bio: "Rell biography goes here." },
+    { name: "Nawtee",   role: "Vocals", photo: "members/nawtee.jpg", bio: "Nawtee biography goes here.", tribute: "R.I.P. Nawtee" },
+    { name: "Traum",    role: "Vocals", photo: "members/traum.jpg",  bio: "Traum biography goes here." },
+  ];
+
+  // Gallery photos are now plain HTML in the Members page markup (see the
+  // .gallery-grid block) rather than generated from a JS array — edit the
+  // <img> tags there directly to add, remove, or change photos.
+
+  const memberGrid = document.getElementById('memberGrid');
+
+  function renderMembers(){
+    memberGrid.innerHTML = MEMBERS.map(m=>`
+      <div class="member-slot">
+        ${m.tribute ? `<div class="tribute-tag">${m.tribute}</div>` : ''}
+        <div class="member-card">
+          <div class="member-photo">
+            <div class="cover-fallback">${m.name.charAt(0)}</div>
+            <img src="${m.photo}" alt="${m.name}" onerror="this.remove()">
+          </div>
+          <div class="member-info">
+            <div class="member-name">${m.name}</div>
+            <div class="member-role">${m.role}</div>
+            <div class="member-bio">${m.bio}</div>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  renderMembers();
+</script>
+
+</body>
+</html>
