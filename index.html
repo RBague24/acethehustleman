@@ -340,6 +340,35 @@
   .social-btn svg{ width:20px; height:20px; }
   .foot-bottom{ display:flex; justify-content:space-between; flex-wrap:wrap; gap:14px; border-top:1px solid rgba(255,255,255,.3); padding-top:26px; color:rgba(255,255,255,.85); font-size:.82rem; }
 
+  /* ---------- COPYRIGHT NOTICE OVERLAY ---------- */
+  .copyright-link{
+    background:none; border:none; padding:0; color:rgba(255,255,255,.85); font-size:inherit; font-family:inherit;
+    text-decoration:underline; text-underline-offset:3px; cursor:pointer;
+  }
+  .copyright-link:hover{ color:#fff; }
+  .copyright-overlay{
+    position:fixed; inset:0; z-index:2000; display:flex; align-items:center; justify-content:center; padding:24px;
+    background:rgba(5,5,6,.82); backdrop-filter:blur(6px);
+    opacity:0; visibility:hidden; pointer-events:none;
+    transition:opacity .3s ease, visibility 0s linear .3s;
+  }
+  .copyright-overlay.open{ opacity:1; visibility:visible; pointer-events:auto; transition:opacity .3s ease; }
+  .copyright-box{
+    position:relative; width:100%; max-width:680px; max-height:85vh; overflow-y:auto;
+    background:var(--bg-2); border:1px solid rgba(255,255,255,.1); border-radius:18px; padding:40px 36px 36px;
+    box-shadow:0 30px 80px -20px rgba(0,0,0,.8);
+  }
+  .copyright-box::before{ content:""; position:absolute; top:0; left:0; right:0; height:3px; background:var(--grad); border-radius:18px 18px 0 0; }
+  .copyright-box h2{ font-size:clamp(1.1rem,3vw,1.5rem); line-height:1.25; margin-bottom:20px; padding-right:36px; }
+  .copyright-box p{ color:var(--muted); font-size:.92rem; line-height:1.7; margin:0 0 14px; }
+  .copyright-box p:last-child{ margin-bottom:0; }
+  .copyright-close{
+    position:absolute; top:14px; right:14px; width:36px; height:36px; border-radius:50%; border:none;
+    background:rgba(255,255,255,.08); color:var(--ink); font-size:1.3rem; line-height:1;
+    display:flex; align-items:center; justify-content:center; transition:background .2s ease;
+  }
+  .copyright-close:hover{ background:rgba(255,255,255,.18); }
+
   ::selection{ background:var(--orange); color:#0a0a0b; }
 </style>
 </head>
@@ -711,10 +740,23 @@
     </div>
   </div>
   <div class="foot-bottom">
-    <span>© 2026 Alex Ellerbe. All rights reserved.</span>
+    <span>© 2026 Alex Ellerbe. All rights reserved. &middot; <button type="button" class="copyright-link" id="openCopyright">Copyright</button></span>
     <span>Site by RB Coding Solutions</span>
   </div>
 </footer>
+
+<!-- COPYRIGHT NOTICE OVERLAY — edit the text below directly -->
+<div class="copyright-overlay" id="copyrightOverlay" role="dialog" aria-modal="true" aria-labelledby="copyrightTitle">
+  <div class="copyright-box">
+    <button type="button" class="copyright-close" id="closeCopyright" aria-label="Close">&times;</button>
+    <h2 id="copyrightTitle">Copyright Disclaimer &amp; Notice of Ownership</h2>
+    <p>All music, beats, instrumentals, samples, recordings, compositions, and other copyrighted material featured on this website remain the property of their respective copyright owners unless otherwise stated.</p>
+    <p>A.C.E. / Thoro Heart Camp does not claim ownership of any third-party copyrighted material used or referenced on this website without authorization or an applicable license.</p>
+    <p>Any third-party music or copyrighted material is presented for promotional, informational, commentary, or illustrative purposes only, where applicable. All rights belong to their respective owners.</p>
+    <p>No infringement of copyright is intended. If you are a copyright owner or authorized representative and believe that material appearing on this website infringes your rights, please contact us so that the matter can be reviewed and addressed appropriately.</p>
+    <p>All original music, lyrics, recordings, artwork, and other creative works owned by A.C.E. / Thoro Heart Camp remain the intellectual property of their respective creators and may not be reproduced, distributed, or used without permission.</p>
+  </div>
+</div>
 
 <script>
   // ---- Upcoming card cover slideshows ----
@@ -880,8 +922,22 @@
       });
     });
   })();
+
+  // ---- Copyright notice overlay ----
+  (function(){
+    const overlay = document.getElementById('copyrightOverlay');
+    const openBtn = document.getElementById('openCopyright');
+    const closeBtn = document.getElementById('closeCopyright');
+    if(!overlay || !openBtn) return;
+    function openC(){ overlay.classList.add('open'); document.body.style.overflow = 'hidden'; closeBtn.focus(); }
+    function closeC(){ overlay.classList.remove('open'); document.body.style.overflow = ''; openBtn.focus(); }
+    openBtn.addEventListener('click', openC);
+    closeBtn.addEventListener('click', closeC);
+    overlay.addEventListener('click', (e)=>{ if(e.target === overlay) closeC(); });
+    document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape' && overlay.classList.contains('open')) closeC(); });
+  })();
 </script>
-</script>
+
 
 </body>
 </html>
